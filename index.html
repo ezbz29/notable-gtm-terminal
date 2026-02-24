@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTM TERMINAL | Notable Capital</title>
+<!-- Alverata is Notable's brand font (commercial). Lora is the fallback. Swap @font-face when Alverata license is available. -->
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* To use actual Alverata, add @font-face here with your license files */
+:root {
+  --bg-primary: #05090f;
+  --bg-secondary: #0a1019;
+  --bg-panel: #0d1522;
+  --bg-card: #111d2e;
+  --bg-hover: #142438;
+  --border: #1a2e48;
+  --border-bright: #243d5a;
+  --text-primary: #f5f5f5;
+  --text-secondary: #b0bca8;
+  --text-dim: #5a6e52;
+  --green: #00d67e;
+  --green-bright: #33f5a6;
+  --red: #ff4757;
+  --red-bright: #ff6b7a;
+  --amber: #ffb930;
+  --amber-bright: #ffd060;
+  --blue: #4a90ff;
+  --cyan: #96a88d;
+  --notable-primary: #96a88d;
+  --notable-primary-bright: #adbfa5;
+  --notable-dark: #6b7d5e;
+  --notable-cream: #f5f5f5;
+  --purple: #9b6dff;
+  --font-brand: 'Lora', 'Alverata', Georgia, serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══ FUNDING TICKER ═══ */
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 5px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.ticker {
+  display: flex;
+  animation: tickerScroll 90s linear infinite;
+  white-space: nowrap;
+  width: fit-content;
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.3px;
+}
+.ticker-item .company { color: var(--text-primary); font-weight: 600; }
+.ticker-item .round { color: var(--notable-primary); font-weight: 700; }
+.ticker-item .detail { color: var(--text-dim); }
+.ticker-item .amount { color: var(--green); font-weight: 700; }
+.ticker-sep { color: var(--border-bright); padding: 0 6px; font-size: 8px; }
+@keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ═══ HEADER ═══ */
+.header {
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.logo-mark {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, #6b7d5e, #96a88d);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-brand);
+  font-weight: 600; font-size: 20px; font-style: italic;
+  color: var(--bg-primary);
+}
+.header-title h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; font-weight: 700; letter-spacing: 3px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.header-title .sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--notable-primary);
+  letter-spacing: 1.5px; margin-top: 3px;
+}
+.header-right { display: flex; align-items: center; gap: 18px; }
+.header-stat { text-align: right; }
+.header-stat .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: var(--text-dim); letter-spacing: 1.2px; text-transform: uppercase;
+}
+.header-stat .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 700; color: var(--notable-primary);
+}
+.live-dot {
+  width: 5px; height: 5px; background: var(--green); border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite; display: inline-block; margin-right: 4px;
+}
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,214,126,0.4)} 50%{opacity:0.6;box-shadow:0 0 0 5px rgba(0,214,126,0)} }
+
+/* ═══ CATEGORY NAV ═══ */
+.category-nav {
+  display: flex; gap: 0; padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; background: var(--bg-secondary);
+  scrollbar-width: none;
+}
+.category-nav::-webkit-scrollbar { display: none; }
+.cat-tab {
+  padding: 9px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; font-weight: 500; letter-spacing: 0.5px;
+  color: var(--text-dim); cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s; text-transform: uppercase;
+}
+.cat-tab:hover { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
+.cat-tab.active {
+  color: var(--notable-primary);
+  border-bottom-color: var(--notable-primary);
+  background: rgba(150,168,141,0.04);
+}
+
+/* ═══ MAIN LAYOUT ═══ */
+.main-container { display: flex; height: calc(100vh - 136px); }
+.tools-panel {
+  width: 460px; min-width: 460px;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  background: var(--bg-primary);
+}
+.panel-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-panel);
+}
+.panel-header h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600; color: var(--text-secondary);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.panel-header .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-dim);
+}
+.tools-table-header {
+  display: grid; grid-template-columns: 32px 1fr 60px 64px 52px;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+.tools-table-header span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; font-weight: 700; color: var(--text-dim);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.tools-table-header span:nth-child(n+3) { text-align: right; }
+.tools-list {
+  flex: 1; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border-bright) var(--bg-primary);
+}
+.tool-row {
+  display: grid; grid-template-columns: 32px 1fr 60px 64px 52px;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(26,37,64,0.5);
+  cursor: pointer; transition: all 0.12s; align-items: center;
+}
+.tool-row:hover { background: var(--bg-hover); }
+.tool-row.active { background: rgba(150,168,141,0.06); border-left: 2px solid #96a88d; padding-left: 12px; }
+.tool-rank { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--text-dim); }
+.tool-row.active .tool-rank { color: var(--notable-primary); }
+.tool-info { display:flex; flex-direction:column; gap:1px; }
+.tool-name { font-family:'DM Sans',sans-serif; font-size:12.5px; font-weight:600; color:var(--text-primary); }
+.tool-tag { font-family:'JetBrains Mono',monospace; font-size:8.5px; color:var(--text-dim); letter-spacing:0.5px; }
+.tool-tag.legacy{color:var(--red)} .tool-tag.emerging{color:var(--green)} .tool-tag.growth{color:var(--amber)} .tool-tag.leader{color:var(--cyan)} .tool-tag.ai-native{color:var(--purple)}
+.tool-score { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; text-align:right; }
+.tool-trend { font-family:'JetBrains Mono',monospace; font-size:10px; text-align:right; font-weight:600; }
+.tool-signal { text-align:right; }
+.signal-bar { display:inline-block; width:36px; height:5px; background:var(--bg-panel); border-radius:2px; overflow:hidden; }
+.signal-bar-fill { height:100%; border-radius:2px; }
+
+/* ═══ DETAIL PANEL ═══ */
+.detail-panel { flex:1; overflow-y:auto; background:var(--bg-primary); scrollbar-width:thin; scrollbar-color:var(--border-bright) var(--bg-primary); }
+.detail-empty { display:flex; align-items:center; justify-content:center; height:100%; flex-direction:column; gap:16px; }
+.detail-empty .icon { font-size:32px; color:var(--notable-primary); opacity:0.2; }
+.detail-empty p { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:1.5px; }
+
+.detail-header {
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+.detail-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
+.detail-title-area { display:flex; align-items:center; gap:12px; }
+.detail-logo {
+  width:44px; height:44px; background:var(--bg-card); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-weight:800; font-size:16px;
+  color:var(--notable-primary); border:1px solid var(--border-bright);
+}
+.detail-title h2 { font-family:'DM Sans',sans-serif; font-size:20px; font-weight:700; }
+.detail-title .tagline { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim); margin-top:2px; }
+.detail-score-big { text-align:right; }
+.detail-score-big .number { font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:800; }
+.detail-score-big .label { font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--text-dim); letter-spacing:1.5px; text-transform:uppercase; }
+
+.detail-meta { display:flex; gap:20px; flex-wrap:wrap; }
+.meta-item .meta-label { font-family:'JetBrains Mono',monospace; font-size:8px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; }
+.meta-item .meta-value { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--text-secondary); margin-top:1px; }
+
+.pros-cons { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid var(--border); }
+.pros-section { padding:18px 24px; border-right:1px solid var(--border); }
+.cons-section { padding:18px 24px; }
+.section-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px;
+  display:flex; align-items:center; gap:6px;
+}
+.section-label.bull{color:var(--green)} .section-label.bear{color:var(--red)}
+.pro-item,.con-item { padding:6px 0; font-size:12.5px; color:var(--text-secondary); line-height:1.5; display:flex; gap:8px; }
+.pro-item::before{content:'▲';color:var(--green);font-size:7px;margin-top:5px;flex-shrink:0}
+.con-item::before{content:'▼';color:var(--red);font-size:7px;margin-top:5px;flex-shrink:0}
+
+.integrations-section { padding:18px 24px; border-bottom:1px solid var(--border); }
+.integrations-grid { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.integration-chip {
+  display:flex; align-items:center; gap:5px; padding:4px 10px;
+  background:var(--bg-card); border:1px solid var(--border); border-radius:5px;
+  font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text-secondary);
+  transition:all 0.12s;
+}
+.integration-chip:hover { border-color:var(--border-bright); background:var(--bg-hover); }
+.integration-icon {
+  width:14px; height:14px; border-radius:2px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:7px; font-weight:700; color:var(--bg-primary);
+}
+
+.offers-section { padding:18px 24px; border-bottom:1px solid var(--border); }
+.offer-card {
+  background:linear-gradient(135deg,rgba(150,168,141,0.06),rgba(150,168,141,0.02));
+  border:1px solid rgba(150,168,141,0.18); border-radius:6px; padding:14px; margin-top:10px;
+}
+.offer-title { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:#adbfa5; margin-bottom:4px; }
+.offer-details { font-size:11.5px; color:var(--text-secondary); line-height:1.5; }
+.offer-value {
+  display:inline-block; background:rgba(0,214,126,0.1); color:var(--green);
+  padding:2px 8px; border-radius:3px; font-family:'JetBrains Mono',monospace;
+  font-size:10px; font-weight:700; margin-top:6px;
+}
+
+.cta-section { padding:18px 24px; }
+.cta-button {
+  width:100%; padding:12px 24px;
+  background:linear-gradient(135deg, #96a88d, #adbfa5);
+  color:#f5f5f5; font-family:'JetBrains Mono',monospace;
+  font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  border:none; border-radius:6px; cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.cta-button:hover { transform:translateY(-1px); box-shadow:0 4px 20px rgba(150,168,141,0.3); }
+.cta-sub {
+  text-align:center; margin-top:6px; font-family:'JetBrains Mono',monospace;
+  font-size:8px; color:var(--text-dim); letter-spacing:0.5px;
+}
+
+/* Notable watermark */
+.notable-watermark {
+  padding: 12px 24px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  background: rgba(150,168,141,0.03);
+}
+.visit-btn {
+  display:inline-flex; align-items:center; gap:6px; padding:6px 14px;
+  background:var(--bg-card); border:1px solid var(--border-bright); border-radius:5px;
+  color:var(--notable-primary); font-family:'JetBrains Mono',monospace;
+  font-size:10px; font-weight:600; letter-spacing:0.5px; cursor:pointer;
+  text-decoration:none; transition:all 0.15s; margin-top:12px;
+}
+.visit-btn:hover { background:var(--bg-hover); border-color:var(--notable-primary); color:var(--notable-primary-bright); }
+.customers-row {
+  display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;
+}
+.customer-chip {
+  padding:3px 8px; background:rgba(150,168,141,0.06); border:1px solid rgba(150,168,141,0.12);
+  border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:9px;
+  color:var(--text-secondary); letter-spacing:0.3px;
+}
+.notable-watermark span {
+  font-family: var(--font-brand);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--notable-primary);
+  letter-spacing: 0.5px;
+}
+
+.mini-chart { display:flex; align-items:flex-end; gap:1px; height:18px; }
+.mini-bar { width:3px; border-radius:1px; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.fade-in { animation: fadeIn 0.25s ease forwards; }
+
+::-webkit-scrollbar{width:5px} ::-webkit-scrollbar-track{background:var(--bg-primary)} ::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:3px}
+
+@media(max-width:900px){
+  .main-container{flex-direction:column;height:auto}
+  .tools-panel{width:100%;min-width:100%;max-height:50vh}
+  .pros-cons{grid-template-columns:1fr}
+  .pros-section{border-right:none;border-bottom:1px solid var(--border)}
+}
+
+/* Scanlines */
+body::after {
+  content:''; position:fixed; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#05090f;z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <div style="font-family:'Lora','Alverata',Georgia,serif;font-style:italic;font-size:28px;color:#96a88d;">Notable Capital</div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5a6e52;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">GTM Terminal · Access Required</div>
+  <input id="pwInput" type="password" placeholder="Enter password" style="background:#0d1522;border:1px solid #1a2e48;border-radius:6px;padding:10px 20px;color:#f5f5f5;font-family:'JetBrains Mono',monospace;font-size:13px;width:260px;text-align:center;outline:none;" onkeydown="if(event.key==='Enter')checkPw()">
+  <button onclick="checkPw()" style="background:linear-gradient(135deg,#6b7d5e,#96a88d);color:#f5f5f5;border:none;border-radius:6px;padding:8px 32px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-weight:600;">Enter</button>
+  <div id="pwError" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff4757;display:none;">ACCESS DENIED</div>
+</div>
+<script>
+function checkPw(){
+  if(document.getElementById('pwInput').value==='Notable2026'){
+    document.getElementById('passwordGate').style.display='none';
+    document.getElementById('pwInput').value='';
+  } else {
+    const e=document.getElementById('pwError');
+    e.style.display='block';
+    setTimeout(()=>e.style.display='none',2000);
+  }
+}
+document.getElementById('pwInput').focus();
+</script>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-mark">N</div>
+    <div class="header-title">
+      <h1>GTM TERMINAL</h1>
+      <div class="sub">NOTABLE CAPITAL · GTM STACK INTELLIGENCE</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-stat"><div class="label">INSTRUMENTS</div><div class="value" id="totalTools">—</div></div>
+    <div class="header-stat"><div class="label">SECTORS</div><div class="value" id="totalCats">—</div></div>
+    <div class="header-stat"><div class="label">MARKET</div><div class="value"><span class="live-dot"></span>LIVE</div></div>
+  </div>
+</div>
+
+<div class="category-nav" id="categoryNav"></div>
+
+<div class="main-container">
+  <div class="tools-panel">
+    <div class="panel-header">
+      <h2 id="panelTitle">SELECT A SECTOR</h2>
+      <span class="count" id="panelCount"></span>
+    </div>
+    <div class="tools-table-header">
+      <span>#</span><span>INSTRUMENT</span><span>SCORE</span><span>TREND</span><span>PMF</span>
+    </div>
+    <div class="tools-list" id="toolsList"></div>
+  </div>
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-empty">
+      <div class="icon">◆</div>
+      <p>SELECT AN INSTRUMENT TO VIEW ANALYSIS</p>
+      <p style="font-size:9px;color:var(--notable-dark);margin-top:4px">POWERED BY NOTABLE CAPITAL</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ REAL GTM FUNDING TICKER DATA ═══
+// ═══ TICKER DATA — dynamically generated from tool database ═══
+
+// ═══ CATEGORY DATABASE ═══
+const CATEGORIES = {
+  "crm": {
+    name: "CRM & System of Record", short: "CRM",
+    tools: [
+      { name:"Salesforce", tag:"LEADER", tagClass:"leader", score:94, trend:"+1.2", trendDir:"up", signal:92, tagline:"Enterprise CRM platform powering 150K+ companies", founded:"1999", stage:"Public (CRM)", hq:"San Francisco, CA", url:"https://www.salesforce.com", customers:["AWS","Spotify","Toyota","Adidas"], pros:["Dominant market position — used by more GTM teams than any other CRM globally","4,000+ AppExchange integrations create an ecosystem moat no competitor can replicate","Agentforce AI and Einstein GPT rapidly advancing autonomous agent capabilities"], cons:["Total cost of ownership spirals with add-ons, consultants, and admin overhead","UI modernization still inconsistent — Lightning adoption remains uneven","Implementation complexity creates heavy dependency on SI partners"], integrations:["Slack","Tableau","MuleSoft","HubSpot","Outreach","Gong","Marketo","Snowflake","AWS","Outlook","DocuSign"], offer:"Salesforce for Startups", offerDetail:"50% off + up to $25K in credits for qualifying startups.", offerValue:"UP TO $25K CREDITS" },
+      { name:"HubSpot", tag:"LEADER", tagClass:"leader", score:91, trend:"+3.8", trendDir:"up", signal:94, tagline:"All-in-one CRM platform with best-in-class UX", founded:"2006", stage:"Public (HUBS)", hq:"Cambridge, MA", url:"https://www.hubspot.com", customers:["Notion","DoorDash","Eventbrite","Trello"], pros:["Fastest time-to-value — teams go live in days, not months","Free tier is genuinely powerful with Clearbit data now included for all users","Breeze AI co-pilot unifies marketing, sales, and service in a single pane of glass"], cons:["Contact-based pricing gets expensive as database scales past 10K contacts","Enterprise features still lag Salesforce for complex multi-BU organizations","Customization ceiling hits faster than expected at scale"], integrations:["Salesforce","Slack","Gmail","Outlook","Shopify","WordPress","Zoom","Stripe","Zapier","LinkedIn","Snowflake"], offer:"HubSpot for Startups", offerDetail:"Up to 90% off Growth Suite in Year 1.", offerValue:"UP TO 90% OFF Y1" },
+      { name:"Attio", tag:"AI-NATIVE", tagClass:"ai-native", score:87, trend:"+14.2", trendDir:"up", signal:82, tagline:"Next-gen CRM with relationship-graph architecture", founded:"2019", stage:"Series B ($33M · Redpoint)", hq:"London, UK", url:"https://attio.com", customers:["Replicate","Modal","Pylon","Causal"], pros:["AI-native from the ground up — relationships-first data model surfaces hidden connections","Extremely flexible custom objects and workflows without code","Rapidly growing with strong word-of-mouth in startup and VC communities"], cons:["Integration ecosystem still maturing vs HubSpot's breadth","Enterprise security and compliance features still developing","Smaller customer base means fewer templates and community resources"], integrations:["Slack","Gmail","Outlook","Linear","Typeform","Zapier","Make","Intercom","Clearbit","Calendly"], offer:"Attio Startup Program", offerDetail:"Free Plus plan for 1 year for startups under $5M raised.", offerValue:"FREE PLUS PLAN 1YR" },
+      { name:"Notion", tag:"GROWTH", tagClass:"growth", score:82, trend:"+5.0", trendDir:"up", signal:80, tagline:"All-in-one workspace increasingly used as lightweight CRM", founded:"2013", stage:"Series C ($275M · Coatue, Sequoia)", hq:"San Francisco, CA", url:"https://www.notion.so", customers:["Figma","Pixar","Nike","Uber","Samsung"], pros:["Massive adoption — 100M+ users creates natural CRM use case for teams already in Notion","Databases with relations, rollups, and formulas rival basic CRM functionality","API and integrations growing rapidly; templates make CRM setup fast"], cons:["Not a purpose-built CRM — lacks pipeline automation, sequences, and forecasting","No native email, dialer, or engagement tools","Scales poorly for sales teams with complex deal cycles"], integrations:["Slack","Google Drive","Zapier","Figma","GitHub","Jira","Linear","Confluence"], offer:"Notion Free Plan", offerDetail:"Free for individuals. Teams from $10/seat/mo.", offerValue:"FREE INDIVIDUAL PLAN" },
+      { name:"Airtable", tag:"GROWTH", tagClass:"growth", score:80, trend:"+2.0", trendDir:"up", signal:75, tagline:"Flexible database platform used as lightweight CRM", founded:"2012", stage:"Series F ($735M · Thrive, D1, Coatue)", hq:"San Francisco, CA", url:"https://www.airtable.com", customers:["Netflix","Shopify","Medium","ExpressVPN"], pros:["Infinitely flexible — teams build custom CRM workflows without code","Rich field types, views, and automations rival purpose-built CRMs for SMB use","Massive template library and integration ecosystem"], cons:["Not a purpose-built CRM — lacks native pipeline and forecasting","Scales poorly for complex sales processes","No built-in email, dialer, or engagement tools"], integrations:["Slack","Salesforce","Gmail","Zapier","Jira","Twilio","Stripe","Google Calendar","Outlook"], offer:"Airtable Free Plan", offerDetail:"Free for up to 5 users.", offerValue:"FREE UP TO 5 USERS" },
+      { name:"Pipedrive", tag:"GROWTH", tagClass:"growth", score:79, trend:"+0.5", trendDir:"up", signal:70, tagline:"Sales-first CRM built by salespeople", founded:"2010", stage:"PE-backed", hq:"Tallinn, Estonia", url:"https://www.pipedrive.com", customers:["Skyscanner","Vimeo"], pros:["Intuitive pipeline-centric UI that reps enjoy using","Strong value at price point for SMB sales teams","AI Sales Assistant provides useful activity recommendations"], cons:["Marketing automation weak compared to HubSpot","Reporting lacks enterprise-grade analytics","Limited customization for complex B2B sales motions"], integrations:["Slack","Gmail","Outlook","Zoom","Zapier","Mailchimp","Trello","Asana","DocuSign","QuickBooks"], offer:"Pipedrive Startup Program", offerDetail:"30% off all plans for the first year.", offerValue:"30% OFF YEAR 1" },
+      { name:"Reevo", tag:"AI-NATIVE", tagClass:"ai-native", score:78, trend:"+30.0", trendDir:"up", signal:72, tagline:"AI-native Revenue Operating System — $80M from Khosla & KP", founded:"2024", stage:"Series A ($80M · Khosla, Kleiner Perkins)", hq:"Santa Clara, CA", url:"https://reevo.ai", customers:[], pros:["Founded by ex-DoorDash/Stripe/Amazon engineers with AI-first architecture","Unifies prospecting, sequences, dialer, meeting intel, and pipeline in one system","$80M from Khosla and Kleiner validates the vertically integrated thesis"], cons:["Extremely early — product in rapid development with limited customer base","Ambitious scope increases execution risk vs focused point solutions","Unproven at enterprise scale against Salesforce ecosystem"], integrations:["Gmail","Google Calendar","Slack","Zoom"], offer:"Reevo Free Trial", offerDetail:"Free to get started. Contact for pricing.", offerValue:"FREE TO START" },
+      { name:"Affinity", tag:"GROWTH", tagClass:"growth", score:77, trend:"+3.0", trendDir:"up", signal:70, tagline:"Relationship intelligence CRM for dealmakers", founded:"2014", stage:"Series C ($80M · Menlo Ventures)", hq:"San Francisco, CA", url:"https://www.affinity.co", customers:["Bain Capital","SoftBank","Spark Capital"], pros:["Auto-captures relationship data from email and calendar — zero manual entry","Purpose-built for VC, PE, and relationship-driven dealflow","Relationship scoring identifies warmest paths to any contact"], cons:["Niche positioning limits appeal outside financial services and dealmaking","Premium pricing for the feature set relative to horizontal CRMs","Integration depth narrower than Salesforce or HubSpot"], integrations:["Gmail","Outlook","Salesforce","Slack","Zapier","Google Calendar"], offer:"Affinity Demo", offerDetail:"Custom pricing based on team size.", offerValue:"CUSTOM PRICING" },
+      { name:"Close", tag:"GROWTH", tagClass:"growth", score:77, trend:"+2.1", trendDir:"up", signal:66, tagline:"CRM built for inside sales velocity", founded:"2013", stage:"Bootstrapped", hq:"San Francisco, CA", url:"https://www.close.com", customers:["Zapier","Toggl"], pros:["Built-in calling, email, and SMS — true all-in-one for SDRs","Lightning-fast UI optimized for high-volume outreach","Transparent pricing with no per-feature upsells"], cons:["Not built for complex enterprise deal cycles","Limited marketing and service functionality","Smaller integration ecosystem"], integrations:["Slack","Gmail","Zoom","Zapier","Calendly","Segment","Clearbit","Intercom","HubSpot"], offer:"Close Free Trial", offerDetail:"14-day free trial with competitive SMB pricing.", offerValue:"FREE 14-DAY TRIAL" },
+      { name:"Freshsales", tag:"GROWTH", tagClass:"growth", score:76, trend:"+1.5", trendDir:"up", signal:68, tagline:"AI-powered CRM from the Freshworks suite", founded:"2016", stage:"Public (FRSH)", hq:"San Mateo, CA", url:"https://www.freshworks.com/crm/sales", customers:["Klarna","Databricks"], pros:["Freddy AI provides solid lead scoring and deal insights at competitive pricing","Clean, modern UI with quick setup time","Part of broader Freshworks suite for CS, ITSM, and marketing"], cons:["Brand perception lags behind HubSpot and Salesforce","Integration ecosystem noticeably smaller","Advanced workflow automation has limitations"], integrations:["Slack","Gmail","Outlook","Zapier","Freshdesk","Shopify","Mailchimp","QuickBooks","Segment"], offer:"Freshworks for Startups", offerDetail:"$10,000 in credits across Freshworks products.", offerValue:"$10K CREDITS" },
+      { name:"Monday CRM", tag:"GROWTH", tagClass:"growth", score:75, trend:"+3.2", trendDir:"up", signal:66, tagline:"CRM built on monday.com's work OS platform", founded:"2022", stage:"Public (MNDY)", hq:"Tel Aviv, Israel", url:"https://monday.com/crm", customers:["Canva","Coca-Cola","Uber"], pros:["Inherits monday.com's powerful workflow automation engine","Flexible board-based UI familiar to 225K+ existing customers","Strong project management + CRM crossover for ops teams"], cons:["CRM product is newer and less mature than dedicated solutions","Sales-specific features lag HubSpot and Salesforce","Can feel more like a project tool than a purpose-built CRM"], integrations:["Slack","Gmail","Outlook","Zoom","Zapier","Salesforce","HubSpot","DocuSign","Mailchimp"], offer:"Monday CRM Free Trial", offerDetail:"14-day free trial.", offerValue:"14-DAY FREE TRIAL" },
+      { name:"Nutshell", tag:"GROWTH", tagClass:"growth", score:74, trend:"+2.5", trendDir:"up", signal:58, tagline:"Simple, affordable CRM for small businesses", founded:"2010", stage:"Bootstrapped", hq:"Ann Arbor, MI", url:"https://www.nutshell.com", customers:["Yelp"], pros:["Purpose-built simplicity — teams adopt without formal training","Built-in email marketing and web forms reduce need for separate tools","Flat, transparent pricing with no per-feature upsells"], cons:["Feature ceiling hits fast for growing sales organizations","Limited enterprise customization and reporting depth","Small brand presence makes it harder to attract talent who know it"], integrations:["Gmail","Outlook","Slack","Zapier","Mailchimp","QuickBooks","Intercom","Google Calendar"], offer:"Nutshell Free Trial", offerDetail:"14-day free trial. Plans from $16/user/mo.", offerValue:"FROM $16/USER/MO" },
+      { name:"Microsoft Dynamics 365", tag:"LEGACY", tagClass:"legacy", score:74, trend:"-0.8", trendDir:"down", signal:72, tagline:"Enterprise CRM deeply tied to Microsoft stack", founded:"2003", stage:"Public (MSFT)", hq:"Redmond, WA", url:"https://dynamics.microsoft.com", customers:["HP","Coca-Cola","BMW"], pros:["Seamless integration with Microsoft 365, Teams, and Azure","Copilot AI integration improving across all modules","Strong for orgs deeply embedded in Microsoft ecosystem"], cons:["UI feels dated compared to modern alternatives","Licensing model notoriously complex","Implementation requires specialized partners"], integrations:["Microsoft 365","Teams","Azure","Power BI","LinkedIn Sales Nav","Outlook","SharePoint","Power Automate","SAP"], offer:"Microsoft Founders Hub", offerDetail:"Up to $150K in Azure credits.", offerValue:"UP TO $150K AZURE" },
+      { name:"SugarCRM", tag:"LEGACY", tagClass:"legacy", score:72, trend:"-0.5", trendDir:"down", signal:62, tagline:"Open-source roots with strong mid-market positioning", founded:"2004", stage:"PE-backed (Accel-KKR)", hq:"Cupertino, CA", url:"https://www.sugarcrm.com", customers:["Sennheiser","Tetley","Tyson Foods"], pros:["Strong mid-market fit with reasonable total cost of ownership","Sugar Sell, Market, and Serve create unified customer experience","Time-aware CX platform surfaces historical context for every interaction"], cons:["Innovation pace has slowed under PE ownership","UI feels dated compared to modern alternatives","Smaller ecosystem and fewer integrations than leaders"], integrations:["Gmail","Outlook","Slack","Zapier","Google Workspace","Mailchimp","DocuSign","QuickBooks"], offer:"SugarCRM Demo", offerDetail:"Custom pricing. Demo available.", offerValue:"CUSTOM PRICING" },
+      { name:"Day.ai", tag:"AI-NATIVE", tagClass:"ai-native", score:72, trend:"+20.0", trendDir:"up", signal:60, tagline:"AI-native CRM that auto-captures relationships", founded:"2023", stage:"Seed (Lightspeed, Greylock)", hq:"San Francisco, CA", url:"https://www.day.ai", customers:[], pros:["Fully AI-native — auto-captures contacts, meetings, and relationship data","Zero manual data entry — the CRM fills itself","Clean modern UX purpose-built for the AI era"], cons:["Very early stage with limited feature maturity","Unproven at scale","Competing against incumbents with deep ecosystems"], integrations:["Gmail","Google Calendar","Slack","Zoom","LinkedIn"], offer:"Day.ai Beta", offerDetail:"Free during beta.", offerValue:"FREE BETA ACCESS" },
+      { name:"SAP Sales Cloud", tag:"LEGACY", tagClass:"legacy", score:70, trend:"-1.0", trendDir:"down", signal:65, tagline:"Enterprise CRM for SAP ecosystem organizations", founded:"1972", stage:"Public (SAP)", hq:"Walldorf, Germany", url:"https://www.sap.com/products/crm.html", customers:["Bosch","Siemens","Lenovo","Porsche"], pros:["Unmatched integration with SAP ERP, S/4HANA, and SuccessFactors","Strong for manufacturing, CPG, and complex enterprise verticals","AI features improving via SAP Joule assistant"], cons:["Notoriously complex implementation — requires SAP consulting partners","UI and UX significantly behind modern CRM alternatives","Total cost of ownership among the highest in the market"], integrations:["SAP","Microsoft 365","Outlook","Slack","LinkedIn"], offer:"SAP for Startups", offerDetail:"SAP.iO startup program with free access to select products.", offerValue:"SAP.IO PROGRAM" },
+      { name:"Copper", tag:"LEGACY", tagClass:"legacy", score:68, trend:"-2.0", trendDir:"down", signal:45, tagline:"Google Workspace-native CRM", founded:"2013", stage:"PE-backed", hq:"San Francisco, CA", url:"https://www.copper.com", customers:["Masterclass","Atlassian"], pros:["Best-in-class Google Workspace integration — lives in Gmail","Zero data entry with automatic contact and activity capture","Simple enough for non-technical teams to self-manage"], cons:["Completely tied to Google ecosystem — not for Microsoft shops","Growth stalled as market moves to AI-native alternatives","Feature depth pales against modern CRM solutions"], integrations:["Google Workspace","Gmail","Google Calendar","Slack","Zapier","Mailchimp","DocuSign"], offer:"Copper Free Trial", offerDetail:"14-day free trial.", offerValue:"14-DAY FREE TRIAL" },
+      { name:"Zoho CRM", tag:"LEGACY", tagClass:"legacy", score:67, trend:"-0.3", trendDir:"down", signal:60, tagline:"Budget CRM with 50+ suite apps", founded:"2005", stage:"Private (Bootstrapped)", hq:"Chennai, India", url:"https://www.zoho.com/crm", customers:["Amazon India","Suzuki"], pros:["Most features per dollar in the market","Massive 50+ app suite for all-in-one approach","Zia AI assistant improving across modules"], cons:["UX inconsistency across sprawling suite","Perceived as budget option limits enterprise adoption","Support quality varies by region"], integrations:["Gmail","Outlook","Slack","Zapier","Mailchimp","Shopify","QuickBooks","Google Ads","Microsoft Teams","Twilio"], offer:"Zoho for Startups", offerDetail:"Up to $2,500 in wallet credits.", offerValue:"UP TO $2.5K CREDITS" }
+    ]
+  },
+  "enrichment": {
+    name: "Enrichment & Data Providers", short: "ENRICHMENT",
+    tools: [
+      { name:"Clay", tag:"LEADER", tagClass:"leader", score:95, trend:"+22.5", trendDir:"up", signal:96, tagline:"The GTM engineer's workbench — $100M ARR, $3B valuation", founded:"2017", stage:"Series C ($100M · CapitalG, Sequoia)", hq:"New York, NY", url:"https://www.clay.com", customers:["OpenAI","Anthropic","Cursor","Canva","Intercom"], pros:["Waterfall enrichment across 75+ data providers eliminates data gaps entirely","AI research agent can enrich any custom field imaginable","Created the GTM Engineering discipline — 10K+ customers"], cons:["Steep learning curve for non-technical teams","Credit consumption unpredictable at scale","Not a system of record — needs CRM underneath"], integrations:["Salesforce","HubSpot","Outreach","Instantly","Smartlead","Apollo","ZoomInfo","Clearbit","OpenAI","Anthropic","Slack","Webhooks"], offer:"Clay Explorer", offerDetail:"Free 100 credits/mo. Creator $149/mo.", offerValue:"FREE 100 CREDITS/MO" },
+      { name:"ZoomInfo", tag:"LEADER", tagClass:"leader", score:91, trend:"+0.5", trendDir:"up", signal:88, tagline:"Largest B2B contact database globally", founded:"2000", stage:"Public (ZI)", hq:"Waltham, MA", url:"https://www.zoominfo.com", customers:["PayPal","Unilever","T-Mobile","Snowflake"], pros:["300M+ profiles — most comprehensive verified B2B database","Intent data, org charts, technographics, and Chorus CI unified","Copilot AI generates personalized outreach at scale"], cons:["Premium pricing ($15K+/yr min) out of reach for startups","Annual contracts and aggressive sales tactics frustrate buyers","Data freshness varies — stale records common in some verticals"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Marketo","Slack","Dynamics","Pipedrive","Gong","Snowflake"], offer:"ZoomInfo Free Community", offerDetail:"Free Community Edition with limited credits.", offerValue:"FREE COMMUNITY TIER" },
+      { name:"Apollo.io", tag:"GROWTH", tagClass:"growth", score:88, trend:"+6.2", trendDir:"up", signal:90, tagline:"All-in-one prospecting + engagement at 275M+ contacts", founded:"2015", stage:"Series D ($100M · Bain Capital)", hq:"San Francisco, CA", url:"https://www.apollo.io", customers:["Autodesk","Qualtrics","Notion"], pros:["275M+ database with engagement built in — best value in market","Free tier with 10K email credits/month is absurdly generous","Sequences, dialer, and data in one platform eliminates stack bloat"], cons:["Data accuracy varies vs ZoomInfo for verified enterprise contacts","Platform can feel overwhelming with feature density","Email deliverability challenges at very high volume"], integrations:["Salesforce","HubSpot","Gmail","Outlook","Slack","Zapier","LinkedIn","Sendgrid","Twilio","Snowflake"], offer:"Apollo Free Tier", offerDetail:"Free plan with 10K email credits/month.", offerValue:"FREE 10K EMAILS/MO" },
+      { name:"Hunter.io", tag:"GROWTH", tagClass:"growth", score:78, trend:"+2.0", trendDir:"up", signal:72, tagline:"Email finder and verification at scale", founded:"2015", stage:"Bootstrapped", hq:"Paris, France", url:"https://hunter.io", customers:["Google","Adobe","IBM","Microsoft"], pros:["Domain search and email finder are fast and reliable","Bulk verification ensures clean lists before outreach","Transparent, affordable pricing for SMBs"], cons:["Only finds and verifies emails — no phone, enrichment, or sequencing","Database smaller than ZoomInfo/Apollo","Limited to email — not a full intelligence platform"], integrations:["Salesforce","HubSpot","Zapier","Gmail","Pipedrive","Zoho","Google Sheets"], offer:"Hunter Free Plan", offerDetail:"Free 25 searches and 50 verifications/month.", offerValue:"25 FREE SEARCHES/MO" },
+      { name:"The Org", tag:"GROWTH", tagClass:"growth", score:74, trend:"+5.0", trendDir:"up", signal:62, tagline:"World's largest network of 300K+ public org charts", founded:"2017", stage:"Series B ($33M · Sequoia, Founders Fund, Tiger)", hq:"New York, NY", url:"https://theorg.com", customers:[], pros:["300K+ org charts give unique visibility into company hierarchies","API and CRM integrations pull org data into sales workflows","Backed by Sequoia, Founders Fund, and Tiger Global"], cons:["Org chart data can be stale or incomplete for many companies","Limited email and phone data vs ZoomInfo/Apollo","Narrow use case relative to full-stack enrichment"], integrations:["Salesforce","API"], offer:"The Org Free Plan", offerDetail:"Free to browse. Pro from $99/mo.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Clearbit (HubSpot)", tag:"GROWTH", tagClass:"growth", score:79, trend:"-1.2", trendDir:"down", signal:70, tagline:"Real-time B2B data enrichment — now free with HubSpot", founded:"2014", stage:"Acquired by HubSpot", hq:"San Francisco, CA", url:"https://clearbit.com", customers:["Asana","Segment","Intercom"], pros:["Real-time enrichment API is fast and reliable","Now free for all HubSpot customers","Clean data model for form enrichment and routing"], cons:["Post-acquisition standalone future uncertain","Database smaller than ZoomInfo outside tech","Deepening HubSpot lock-in"], integrations:["HubSpot","Salesforce","Segment","Marketo","Slack","Zapier","Intercom","Drift","Webhooks"], offer:"Free with HubSpot", offerDetail:"Included free for all HubSpot customers.", offerValue:"FREE W/ HUBSPOT" },
+      { name:"Unify", tag:"EMERGING", tagClass:"emerging", score:82, trend:"+24.0", trendDir:"up", signal:82, tagline:"Intent-driven outbound orchestration", founded:"2023", stage:"Series A ($18M · Emergence)", hq:"San Francisco, CA", url:"https://www.unifygtm.com", customers:[], pros:["Combines intent signals, enrichment, and outbound in one platform","AI agents automate full prospecting-to-sequencing workflow","Purpose-built for the GTM engineering motion"], cons:["Very early — product rapidly evolving","Limited enterprise track record","Competing against well-funded Clay and incumbents"], integrations:["Salesforce","HubSpot","Slack","Outreach","Instantly","Smartlead","Apollo","Clay","OpenAI"], offer:"Unify Beta", offerDetail:"Early-stage pricing available.", offerValue:"STARTUP PRICING" },
+      { name:"Cognism", tag:"GROWTH", tagClass:"growth", score:81, trend:"+3.6", trendDir:"up", signal:75, tagline:"Phone-verified contacts with best GDPR compliance", founded:"2015", stage:"PE-backed ($100M · Viking Global)", hq:"London, UK", url:"https://www.cognism.com", customers:["Seismic","Drift","Bombora"], pros:["Diamond Data phone verification uniquely valuable for cold calling","Best GDPR/CCPA compliance in the data provider space","Strong European data coverage"], cons:["US data thinner than ZoomInfo/Apollo","Premium pricing","Chrome extension can be sluggish"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Dynamics","Pipedrive","Slack","Zapier"], offer:"Cognism Startup Program", offerDetail:"25 free leads to test data quality.", offerValue:"25 FREE VERIFIED LEADS" },
+      { name:"Lusha", tag:"GROWTH", tagClass:"growth", score:76, trend:"+1.8", trendDir:"up", signal:68, tagline:"Crowdsourced B2B data with buyer intent signals", founded:"2016", stage:"Series B", hq:"Tel Aviv, Israel", url:"https://www.lusha.com", customers:["Zendesk","Yotpo"], pros:["Simple, intuitive Chrome extension for quick lookups","Buyer intent signals recently added","Competitive pricing for basic enrichment"], cons:["Database depth lower than ZoomInfo","Accuracy inconsistent outside tech verticals","Advanced features feel bolted on"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Pipedrive","Gmail","Outlook","Zapier","Slack"], offer:"Lusha Free Plan", offerDetail:"5 free credits per month.", offerValue:"5 FREE CREDITS/MO" },
+      { name:"LeadIQ", tag:"GROWTH", tagClass:"growth", score:75, trend:"+1.4", trendDir:"up", signal:62, tagline:"Prospecting workflow with Scribe AI drafts", founded:"2015", stage:"Series B", hq:"San Francisco, CA", url:"https://leadiq.com", customers:["Greenhouse","Dialpad"], pros:["Chrome extension captures and syncs contacts seamlessly","Scribe AI generates personalized email drafts","Purpose-built for SDR workflow"], cons:["More capture tool than full database","Enterprise features limited vs ZoomInfo","Pricing has increased moving upmarket"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gong","Slack","Gmail","LinkedIn"], offer:"LeadIQ Freemium", offerDetail:"15 verified emails and 5 mobile numbers per week free.", offerValue:"15 FREE EMAILS/WEEK" },
+      { name:"UserGems", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+11.5", trendDir:"up", signal:76, tagline:"Champion tracking when contacts change jobs", founded:"2019", stage:"Series A", hq:"San Francisco, CA", url:"https://www.usergems.com", customers:["Mimecast","Procore","Treasure Data"], pros:["Former customer signals are highest-intent leads available","Integrates directly into CRM and triggers automated workflows","Champion tracking surfaces warm pipeline automatically"], cons:["Narrow use case — job change tracking only","Value depends on having a mature customer base to track","Premium pricing for a single signal type"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Slack","Marketo","6sense","Demandbase"], offer:"UserGems Demo", offerDetail:"Custom pricing based on database size.", offerValue:"CUSTOM PRICING" },
+      { name:"Pipe0", tag:"EMERGING", tagClass:"emerging", score:71, trend:"+15.0", trendDir:"up", signal:55, tagline:"AI-powered lead enrichment and qualification", founded:"2023", stage:"Seed", hq:"San Francisco, CA", url:"https://pipe0.com", customers:[], pros:["AI enrichment with waterfall data from multiple providers","Focus on qualification scoring, not just data fill","Lightweight and fast for early-stage teams"], cons:["Very early with limited market presence","Feature depth behind Clay","Small integration ecosystem"], integrations:["Salesforce","HubSpot","Slack","Zapier","Webhooks"], offer:"Pipe0 Demo", offerDetail:"Contact for beta access.", offerValue:"BETA ACCESS" }
+    ]
+  },
+  "ai_sdr": {
+    name: "AI SDR & Autonomous Outbound", short: "AI SDR",
+    tools: [
+      { name:"11x", tag:"AI-NATIVE", tagClass:"ai-native", score:86, trend:"+28.5", trendDir:"up", signal:88, tagline:"AI workers Alice (outbound) and Jordan (inbound)", founded:"2022", stage:"Series B ($50M @ $350M)", hq:"San Francisco, CA", url:"https://www.11x.ai", customers:["Otter.ai","Airwallex","Brex"], pros:["Alice AI SDR and Jordan AI Phone Agent operate fully autonomously 24/7","Intent-driven targeting with 5x higher deliverability than standard tools","IBM partnership validates enterprise readiness — 100+ customers by mid-2025"], cons:["Pricing is premium — positioned for mid-market and enterprise","Autonomous agents reduce human control over brand voice nuance","Still proving long-term ROI vs well-run human SDR teams"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Slack","Gong","Zoom","Apollo","ZoomInfo","LinkedIn"], offer:"11x Demo", offerDetail:"Free demo with pilot program available for qualifying companies.", offerValue:"PILOT PROGRAM AVAILABLE" },
+      { name:"Artisan (Ava)", tag:"AI-NATIVE", tagClass:"ai-native", score:82, trend:"+22.0", trendDir:"up", signal:82, tagline:"AI employees that automate entire GTM workflows", founded:"2024", stage:"Series A ($12M)", hq:"San Francisco, CA", url:"https://www.artisan.co", customers:[], pros:["YC-backed with provocative 'Stop Hiring Humans' positioning","Ava AI handles full outbound cycle — research, write, send, follow up","Expanding to inbound (Aaron) and scheduling (Aria) agents"], cons:["Very early-stage — product still rapidly maturing","'Replace humans' messaging creates market backlash risk","Enterprise-grade features and compliance still developing"], integrations:["Salesforce","HubSpot","Gmail","Outlook","Slack","LinkedIn","Apollo","ZoomInfo","Zapier"], offer:"Artisan Beta", offerDetail:"Early access pricing for startups. Contact for demo.", offerValue:"STARTUP PRICING" },
+      { name:"Agentforce (Salesforce)", tag:"LEADER", tagClass:"leader", score:82, trend:"+10.0", trendDir:"up", signal:80, tagline:"Salesforce's native AI agent platform for autonomous actions", founded:"2024", stage:"Public (CRM)", hq:"San Francisco, CA", url:"https://www.salesforce.com/agentforce", customers:["Wiley","OpenTable","Saks Fifth Avenue"], pros:["Native to Salesforce — zero integration friction for existing customers","Access to full CRM data context for grounded, hallucination-resistant actions","Backed by Salesforce's enterprise trust, security, and compliance infrastructure"], cons:["Requires Salesforce ecosystem — not standalone","AI capabilities still maturing compared to purpose-built AI SDR tools","Additional cost on top of already expensive Salesforce licenses"], integrations:["Salesforce","Slack","Tableau","MuleSoft","AWS","Google Cloud"], offer:"Salesforce Agentforce", offerDetail:"Included with select Salesforce plans. Custom pricing.", offerValue:"CONTACT SALESFORCE" },
+      { name:"Regie.ai", tag:"GROWTH", tagClass:"growth", score:80, trend:"+8.2", trendDir:"up", signal:74, tagline:"AI copilot for sales teams and content generation", founded:"2020", stage:"Series B", hq:"San Francisco, CA", url:"https://www.regie.ai", customers:[], pros:["Auto-Pilot mode autonomously prospects and engages leads","Strong AI content generation for emails, LinkedIn, and sequences","Deep CRM integration surfaces relevant messaging context"], cons:["Competing against both AI SDR pure-plays and engagement platforms","Brand positioning has shifted multiple times","Premium pricing for full autonomous capabilities"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gong","Slack","LinkedIn","6sense","Bombora"], offer:"Regie.ai Startup Program", offerDetail:"Discounted pricing for qualifying early-stage companies.", offerValue:"STARTUP DISCOUNT" },
+      { name:"Piper (Qualified)", tag:"GROWTH", tagClass:"growth", score:80, trend:"+8.0", trendDir:"up", signal:76, tagline:"AI SDR chatbot for inbound lead conversion", founded:"2018", stage:"Series C ($95M · Sequoia, Tiger Global)", hq:"San Francisco, CA", url:"https://www.qualified.com", customers:["VMware","Poly","Talend"], pros:["AI chatbot qualifies and books meetings from website visitors instantly","Salesforce-native architecture built specifically for enterprise orgs","Backed by Sequoia and Tiger Global with Salesforce Ventures investment"], cons:["Salesforce-only limits addressable market","Premium enterprise pricing","Inbound-focused — not an outbound AI SDR"], integrations:["Salesforce","Outreach","Salesloft","6sense","Demandbase","Slack","Marketo","Pardot"], offer:"Qualified Demo", offerDetail:"Enterprise pricing. Demo available.", offerValue:"ENTERPRISE PRICING" },
+      { name:"Relevance AI", tag:"EMERGING", tagClass:"emerging", score:78, trend:"+15.0", trendDir:"up", signal:72, tagline:"Build and deploy custom AI sales agents", founded:"2020", stage:"Series A", hq:"Sydney, Australia", url:"https://relevanceai.com", customers:[], pros:["Platform approach — build custom agents vs buying pre-built ones","No-code agent builder accessible to non-technical GTM teams","Multi-agent orchestration for complex sales workflows"], cons:["Requires investment in agent design and training","Less turnkey than 11x or Artisan for immediate deployment","Smaller brand recognition in US market"], integrations:["Salesforce","HubSpot","Slack","Zapier","Make","Gmail","Outlook","Webhooks","OpenAI","Anthropic"], offer:"Relevance AI Free Plan", offerDetail:"Free plan with limited agent runs per month.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Agent Frank (Salesforge)", tag:"EMERGING", tagClass:"emerging", score:78, trend:"+14.0", trendDir:"up", signal:70, tagline:"AI SDR handling full outbound from prospecting to meetings", founded:"2023", stage:"Bootstrapped", hq:"Remote-first", url:"https://www.salesforge.ai", customers:["VAI Consulting","ChannelCrawler"], pros:["Full-stack: prospecting, personalized email, follow-up, and meeting booking in one agent","Unlimited mailboxes included with built-in Warmforge deliverability","Among the most cost-effective AI SDRs at $499/mo vs $3K+ competitors"], cons:["Requires Salesforge ecosystem (Mailforge, Infraforge) for full value","Less brand recognition than 11x or Artisan","Quality control in Auto-pilot mode still maturing"], integrations:["Salesforce","HubSpot","Gmail","Slack","Zapier","LinkedIn","Pipedrive"], offer:"Agent Frank Demo", offerDetail:"Book a demo for pricing. Plans from $499/mo.", offerValue:"FROM $499/MO" },
+      { name:"AiSDR", tag:"EMERGING", tagClass:"emerging", score:76, trend:"+18.5", trendDir:"up", signal:68, tagline:"AI-powered outbound on autopilot", founded:"2023", stage:"Seed", hq:"San Francisco, CA", url:"https://www.aisdr.com", customers:[], pros:["Fully automated prospecting, personalization, and follow-up","Learns from your best-performing sequences to improve over time","Simple pricing model compared to complex enterprise alternatives"], cons:["Very young product with limited market track record","Personalization quality can vary across industries","Integration ecosystem is minimal"], integrations:["Salesforce","HubSpot","Gmail","Outlook","Slack","Calendly"], offer:"AiSDR Trial", offerDetail:"Free trial available with limited outreach volume.", offerValue:"FREE TRIAL" },
+      { name:"Landbase", tag:"EMERGING", tagClass:"emerging", score:75, trend:"+12.0", trendDir:"up", signal:62, tagline:"Full agentic GTM execution platform", founded:"2023", stage:"Series A", hq:"San Francisco, CA", url:"https://www.landbase.com", customers:[], pros:["End-to-end autonomous outbound — find, engage, qualify, book","Claims 4-7x higher conversion rates vs traditional outreach","Agentic architecture adapts strategy based on prospect behavior"], cons:["Very early in market — limited customer case studies","Autonomous systems still need human oversight for quality","Competing in increasingly crowded AI SDR space"], integrations:["Salesforce","HubSpot","Slack","Gmail","Outlook","Calendly","Zapier"], offer:"Landbase Demo", offerDetail:"Free demo available. Custom pricing for startups.", offerValue:"CUSTOM STARTUP PRICING" },
+      { name:"Jason AI (Reply.io)", tag:"GROWTH", tagClass:"growth", score:75, trend:"+6.0", trendDir:"up", signal:65, tagline:"AI assistant handling initial prospect responses autonomously", founded:"2014", stage:"Series A", hq:"San Jose, CA", url:"https://reply.io", customers:["Shutterstock"], pros:["Handles initial prospect replies autonomously — qualifies and routes","Part of Reply.io's multichannel platform (email, LinkedIn, calls, SMS)","Free plan available with AI sequence generation"], cons:["Brand awareness lower than Outreach/Salesloft","LinkedIn automation unreliable due to platform changes","Enterprise features lag behind leaders"], integrations:["Salesforce","HubSpot","Pipedrive","Gmail","Outlook","Zapier","Slack","Vidyard","Calendly"], offer:"Reply.io Free Plan", offerDetail:"Free plan with 200 data credits/month.", offerValue:"FREE + 200 CREDITS" },
+      { name:"Chase (MeetChase)", tag:"EMERGING", tagClass:"emerging", score:72, trend:"+18.0", trendDir:"up", signal:58, tagline:"AI SDR for automated outbound prospecting", founded:"2023", stage:"Seed", hq:"San Francisco, CA", url:"https://meetchase.ai", customers:[], pros:["Autonomous prospecting and outreach with minimal setup","Learns from your best-performing sequences to improve","Simple pricing model for early-stage teams"], cons:["Very early-stage with limited track record","Feature depth behind more established AI SDR platforms","Smaller integration ecosystem"], integrations:["Salesforce","HubSpot","Slack","Gmail"], offer:"Chase Demo", offerDetail:"Contact for demo and beta access.", offerValue:"BETA ACCESS" },
+      { name:"Gojiberry", tag:"EMERGING", tagClass:"emerging", score:70, trend:"+12.0", trendDir:"up", signal:52, tagline:"AI sales agent for e-commerce and DTC brands", founded:"2023", stage:"Seed", hq:"San Francisco, CA", url:"https://gojiberry.ai", customers:[], pros:["Purpose-built AI agent for e-commerce sales conversations","Handles post-purchase surveys and customer engagement","Quick setup for Shopify and DTC brands"], cons:["Narrow focus on e-commerce limits B2B applicability","Very early-stage with limited market traction","Competing against much broader AI agent platforms"], integrations:["Shopify","Slack","Zapier"], offer:"Gojiberry Demo", offerDetail:"Contact for demo.", offerValue:"CONTACT FOR PRICING" }
+    ]
+  },
+  "engagement": {
+    name: "Sales Engagement & Outreach", short: "ENGAGEMENT",
+    tools: [
+      { name:"Outreach", tag:"LEADER", tagClass:"leader", score:90, trend:"+1.5", trendDir:"up", signal:85, tagline:"Enterprise sales execution platform", founded:"2014", stage:"Late-stage Private", hq:"Seattle, WA", url:"https://www.outreach.io", customers:["Adobe","Okta","DocuSign","Zoom"], pros:["Most comprehensive sequence and workflow engine in the market","AI-driven deal intelligence and rep coaching features improving fast","Deep bi-directional Salesforce integration"], cons:["Steep learning curve — full adoption takes months not weeks","Pricing is premium and opaque without transparent tiers","Platform bloat as they expand beyond core engagement"], integrations:["Salesforce","Microsoft 365","Gmail","LinkedIn Sales Nav","Gong","Drift","Slack","Snowflake","Tableau","Zoom","6sense","Chorus"], offer:"Outreach Startup Program", offerDetail:"Custom startup pricing for qualifying early-stage companies.", offerValue:"CUSTOM STARTUP PRICING" },
+      { name:"Salesloft", tag:"LEADER", tagClass:"leader", score:88, trend:"+0.8", trendDir:"up", signal:84, tagline:"Revenue workflow platform with Rhythm AI", founded:"2011", stage:"Acquired by Vista Equity", hq:"Atlanta, GA", url:"https://www.salesloft.com", customers:["IBM","Shopify","Stripe"], pros:["Excellent cadence builder with strong deliverability tools","Rhythm AI engine prioritizes next-best actions for reps","Strong mid-market positioning — less complex than Outreach"], cons:["Vista Equity acquisition creates uncertainty about innovation pace","Market position challenged by AI-native newcomers","Reporting less customizable than Outreach for complex orgs"], integrations:["Salesforce","HubSpot","Gmail","Outlook","Slack","LinkedIn","Gong","Drift","Zoom","Vidyard","6sense"], offer:"Salesloft Startup Pricing", offerDetail:"Discounted plans for startups under $10M ARR.", offerValue:"DISCOUNTED PLANS" },
+      { name:"Instantly", tag:"EMERGING", tagClass:"emerging", score:84, trend:"+18.5", trendDir:"up", signal:82, tagline:"Cold email infrastructure at scale — bootstrapped to $30M+ ARR", founded:"2021", stage:"Bootstrapped", hq:"Remote-first", url:"https://instantly.ai", customers:[], pros:["Best-in-class email warmup and deliverability infrastructure","Unlimited email accounts at flat pricing — built for volume","B2B Leads database added strong prospecting layer"], cons:["Narrowly focused on cold email — not full multi-channel","Analytics and reporting are basic","No phone dialer or LinkedIn automation native"], integrations:["Zapier","Make","HubSpot","Salesforce","Slack","Pipedrive","Google Workspace","Outlook","Clay"], offer:"Instantly Growth Plan", offerDetail:"$30/mo for unlimited email accounts. Extremely startup-friendly.", offerValue:"$30/MO UNLIMITED ACCOUNTS" },
+      { name:"Nooks", tag:"AI-NATIVE", tagClass:"ai-native", score:84, trend:"+20.0", trendDir:"up", signal:80, tagline:"AI parallel dialer and virtual sales floor", founded:"2020", stage:"Series B ($43M · Kleiner Perkins)", hq:"San Francisco, CA", url:"https://www.nooks.ai", customers:["Deel","Seismic","Finch"], pros:["AI parallel dialer connects reps to live conversations 5x faster","Virtual sales floor recreates energy of in-office cold calling","AI call analysis and coaching improve rep performance in real-time"], cons:["Primarily phone-focused — less multi-channel","Effectiveness depends on phone-friendly ICP","Premium pricing vs basic dialers"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gong","Slack","Zoom","Apollo","LinkedIn"], offer:"Nooks Demo", offerDetail:"Free pilot for SDR teams 5+ reps.", offerValue:"FREE PILOT" },
+      { name:"Smartlead", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+20.0", trendDir:"up", signal:76, tagline:"Cold email at scale with master inbox — bootstrapped", founded:"2022", stage:"Bootstrapped ($20M+ ARR)", hq:"Remote-first", url:"https://www.smartlead.ai", customers:[], pros:["Unlimited email warmup and mailbox rotation at flat pricing","Master inbox unifies all sending accounts beautifully","API-first architecture appeals to GTM engineers"], cons:["Very narrowly focused on cold email infrastructure","Young product with less mature feature set","Support can be slow during rapid growth"], integrations:["Zapier","Make","HubSpot","Salesforce","Slack","Webhooks","Clay"], offer:"Smartlead Basic", offerDetail:"$39/mo with unlimited warmup and 2,000 active leads.", offerValue:"$39/MO UNLIMITED WARMUP" },
+      { name:"Lemlist", tag:"GROWTH", tagClass:"growth", score:79, trend:"+4.1", trendDir:"up", signal:72, tagline:"Personalized cold outreach with LinkedIn automation", founded:"2018", stage:"Bootstrapped", hq:"Paris, France", url:"https://www.lemlist.com", customers:["Uber","Zendesk"], pros:["Industry-leading email personalization with dynamic images/video","LinkedIn automation built natively into sequences","Strong deliverability with lemwarm included"], cons:["UI can feel clunky compared to polished competitors","Limited CRM functionality — needs external system","Reporting depth modest for data-driven teams"], integrations:["Salesforce","HubSpot","Pipedrive","Slack","Zapier","Aircall","Calendly","Gmail","Outlook","Clay"], offer:"Lemlist Plans", offerDetail:"14-day free trial. Plans from $39/mo per seat.", offerValue:"FROM $39/MO/SEAT" },
+      { name:"HeyReach", tag:"EMERGING", tagClass:"emerging", score:79, trend:"+16.0", trendDir:"up", signal:74, tagline:"Scale LinkedIn outreach across unlimited accounts with sender rotation", founded:"2022", stage:"Bootstrapped", hq:"Remote-first", url:"https://www.heyreach.io", customers:["ContactOut","Platter"], pros:["Unlimited LinkedIn accounts for one flat fee with automatic sender rotation — built for agencies","Cloud-based with dedicated IPs is safer than browser-extension alternatives","MCP server integration lets you connect Clay, ChatGPT, and other AI tools directly"], cons:["LinkedIn-only — no email, phone, or multi-channel natively","All LinkedIn automation carries account restriction risk regardless of safety features","Less suited for individual reps who only need one account"], integrations:["HubSpot","Pipedrive","Clay","Zapier","Slack","Webhooks"], offer:"HeyReach Free Trial", offerDetail:"Free trial with full feature access. Plans from $79/mo flat.", offerValue:"$79/MO FLAT — UNLIMITED SEATS" },
+      { name:"Mutiny", tag:"EMERGING", tagClass:"emerging", score:79, trend:"+10.5", trendDir:"up", signal:72, tagline:"AI website personalization for ABM", founded:"2018", stage:"Series B ($50M · Sequoia, Tiger Global)", hq:"San Francisco, CA", url:"https://www.mutinyhq.com", customers:["Snowflake","Qualtrics","Brex"], pros:["No-code website personalization per account/segment","AI recommendations suggest which audiences to personalize","Strong ABM integration with Salesforce, 6sense, Clearbit"], cons:["Value depends on meaningful website traffic","Best for ABM motions — less impactful for broad demand gen","Requires ongoing optimization and testing"], integrations:["Salesforce","HubSpot","6sense","Clearbit","Demandbase","Google Analytics","Slack","Segment"], offer:"Mutiny Demo", offerDetail:"Custom pricing based on traffic volume.", offerValue:"CUSTOM PRICING" },
+      { name:"Orum", tag:"EMERGING", tagClass:"emerging", score:78, trend:"+12.0", trendDir:"up", signal:72, tagline:"AI-powered parallel dialer for sales teams", founded:"2018", stage:"Series B ($22M · Tribe Capital)", hq:"New York, NY", url:"https://www.orum.com", customers:["Lattice","Census"], pros:["AI parallel dialer reaches 5-10x more live conversations per hour","Voicemail drop and call dispositioning built in","Strong Salesforce and Outreach integrations"], cons:["Phone-first — not multi-channel","Effectiveness depends on ICP phone receptiveness","Premium pricing for a dialer"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gong","Slack"], offer:"Orum Demo", offerDetail:"Demo available. Custom pricing.", offerValue:"CUSTOM PRICING" },
+      { name:"SalesHandy", tag:"GROWTH", tagClass:"growth", score:77, trend:"+5.0", trendDir:"up", signal:68, tagline:"Cold email outreach with unlimited sending accounts", founded:"2015", stage:"Bootstrapped", hq:"Ahmedabad, India", url:"https://www.saleshandy.com", customers:["Freshworks"], pros:["Unlimited email accounts and auto-rotation at competitive pricing","B2B lead finder with 700M+ contacts built in","Sender rotation and unified inbox for agency use"], cons:["Brand awareness lower than Instantly/Smartlead in US market","UI less polished than top-tier competitors","Data quality of built-in leads varies"], integrations:["Gmail","Outlook","Salesforce","HubSpot","Pipedrive","Zapier","Slack","Zoho"], offer:"SalesHandy Free Trial", offerDetail:"7-day free trial. Plans from $25/mo.", offerValue:"FROM $25/MO" },
+      { name:"Coldreach", tag:"EMERGING", tagClass:"emerging", score:77, trend:"+15.0", trendDir:"up", signal:68, tagline:"Signal-first AI outreach with deep buying intent", founded:"2023", stage:"Seed", hq:"San Francisco, CA", url:"https://coldreach.ai", customers:[], pros:["Finds deep buying signals beyond basic job changes and funding alerts","Dynamic lead lists evolve automatically as ICP changes","Research-backed outreach generates 3.8% reply rates (10x industry avg)"], cons:["Very early-stage with small customer base","Narrow positioning as signal-only layer","Requires integration with engagement tools for sending"], integrations:["Salesforce","HubSpot","Slack","Apollo","Clay","Zapier"], offer:"Coldreach Demo", offerDetail:"Contact for demo.", offerValue:"DEMO AVAILABLE" },
+      { name:"Monaco", tag:"AI-NATIVE", tagClass:"ai-native", score:77, trend:"+35.0", trendDir:"up", signal:70, tagline:"AI-native sales platform from ex-Brex CRO — $35M Founders Fund", founded:"2025", stage:"Series A ($35M · Founders Fund)", hq:"San Francisco, CA", url:"https://monaco.com", customers:[], pros:["End-to-end: builds TAM, outbound, meeting intel, pipeline in one system","Founding team from Brex (CRO), Apollo (CPO), Clari (SVP Eng)","Human-in-the-loop pairs AI agents with experienced sales pros"], cons:["Launched Feb 2026 in beta — no track record at scale","Service model may be expensive to scale","Sparse web presence and pricing not public"], integrations:["Salesforce","Gmail","Slack","Zoom","Google Calendar"], offer:"Monaco Beta", offerDetail:"Public beta open. Contact for access.", offerValue:"BETA ACCESS" },
+      { name:"Lavender", tag:"EMERGING", tagClass:"emerging", score:76, trend:"+12.0", trendDir:"up", signal:68, tagline:"AI email coaching that improves rep writing in real-time", founded:"2020", stage:"Series A (Y Combinator)", hq:"Remote-first", url:"https://www.lavender.ai", customers:["Twilio","Sharebite","Sendoso"], pros:["Real-time email scoring and AI coaching improves reply rates 2-3x","Trains reps to write better — permanent skill uplift vs just templating","Integrates directly into Gmail, Outlook, Outreach, Salesloft"], cons:["Point solution — email coaching only, not full engagement platform","Value harder to quantify vs tools that directly generate pipeline","Less relevant for orgs with strong email cultures already"], integrations:["Gmail","Outlook","Outreach","Salesloft","HubSpot","Salesforce","Slack","Apollo"], offer:"Lavender Free Plan", offerDetail:"Free for individuals with basic email scoring.", offerValue:"FREE INDIVIDUAL PLAN" },
+      { name:"Dialpad", tag:"GROWTH", tagClass:"growth", score:76, trend:"+2.0", trendDir:"up", signal:68, tagline:"AI-powered business communications and contact center", founded:"2011", stage:"Series F ($170M · ICONIQ, a16z)", hq:"San Francisco, CA", url:"https://www.dialpad.com", customers:["WeWork","Motorola","Xero"], pros:["AI transcription and sentiment analysis on every call","Unified voice, video, messaging, and contact center","Strong mobile experience for remote/hybrid teams"], cons:["More communications platform than pure sales engagement","Feature overlap with dedicated CI tools","Enterprise pricing for full AI features"], integrations:["Salesforce","HubSpot","Slack","Zendesk","Zapier","Microsoft Teams","Google Workspace","Outreach"], offer:"Dialpad Free Trial", offerDetail:"14-day free trial. Plans from $15/user/mo.", offerValue:"FROM $15/USER/MO" },
+      { name:"Aircall", tag:"GROWTH", tagClass:"growth", score:76, trend:"+2.5", trendDir:"up", signal:70, tagline:"Cloud phone system built for sales and support", founded:"2014", stage:"Series D ($120M · Goldman Sachs)", hq:"New York, NY", url:"https://www.aircall.io", customers:["Bain & Company","Pipedrive"], pros:["Click-to-dial from CRM with automatic call logging","200+ integrations including all major CRMs and helpdesks","Power dialer and call monitoring for coaching"], cons:["Not AI-native — less intelligent than Nooks or Orum","Phone-only — no email or LinkedIn","Per-seat pricing gets expensive at scale"], integrations:["Salesforce","HubSpot","Pipedrive","Slack","Zendesk","Intercom","Zapier","Gong","Monday"], offer:"Aircall Free Trial", offerDetail:"7-day free trial. From $30/license/mo.", offerValue:"FROM $30/LICENSE/MO" },
+      { name:"Tofu", tag:"EMERGING", tagClass:"emerging", score:76, trend:"+18.0", trendDir:"up", signal:68, tagline:"AI full-funnel content personalization", founded:"2023", stage:"Seed (SignalFire)", hq:"San Francisco, CA", url:"https://www.tofuhq.com", customers:[], pros:["Generates persona-specific content across the entire funnel","Maintains brand consistency while personalizing per buyer segment","Positioned at intersection of content and ABM"], cons:["Very early with limited enterprise customers","Content quality depends on input brand guidelines","Narrow positioning in competitive space"], integrations:["HubSpot","Salesforce","Marketo","Google Analytics","Slack","Zapier"], offer:"Tofu Demo", offerDetail:"Early-stage pricing for startups.", offerValue:"STARTUP PRICING" },
+      { name:"Salesflow", tag:"GROWTH", tagClass:"growth", score:75, trend:"+7.0", trendDir:"up", signal:66, tagline:"Cloud-based LinkedIn + email for agencies and teams", founded:"2019", stage:"Bootstrapped", hq:"Dublin, Ireland", url:"https://salesflow.io", customers:[], pros:["Blends LinkedIn + email with unified inbox and safety features","Multi-user campaign management built for agencies","Strong safety features with dedicated IPs"], cons:["Less known than HeyReach or Lemlist","Feature set narrower than full engagement platforms","Pricing per seat adds up for larger teams"], integrations:["Salesforce","HubSpot","Slack","Zapier","Pipedrive"], offer:"Salesflow Free Trial", offerDetail:"Free trial available. From $99/user/mo.", offerValue:"FROM $99/USER/MO" },
+      { name:"La Growth Machine", tag:"EMERGING", tagClass:"emerging", score:74, trend:"+7.5", trendDir:"up", signal:60, tagline:"Multichannel prospecting across email, LinkedIn, Twitter", founded:"2019", stage:"Series A", hq:"Paris, France", url:"https://lagrowthmachine.com", customers:[], pros:["True multichannel across email, LinkedIn, and Twitter/X","Visual workflow builder makes complex sequences intuitive","Strong LinkedIn automation with safety guardrails"], cons:["Primarily European user base — less US traction","Integration ecosystem limited","Deliverability tools less mature than Instantly/Smartlead"], integrations:["HubSpot","Pipedrive","Salesforce","Slack","Zapier","Gmail","Outlook"], offer:"LGM Starter", offerDetail:"14-day free trial. Pro plan at €80/mo per seat.", offerValue:"14-DAY FREE TRIAL" },
+      { name:"Dripify", tag:"GROWTH", tagClass:"growth", score:74, trend:"+8.0", trendDir:"up", signal:66, tagline:"Cloud-based LinkedIn drip campaigns with analytics", founded:"2019", stage:"Bootstrapped", hq:"Remote-first", url:"https://dripify.io", customers:[], pros:["Cloud-based infrastructure runs campaigns even when browser is closed","Clean UI with strong analytics on acceptance and reply rates","Team inbox and collaboration features included at lower price points"], cons:["One LinkedIn account per license — costs multiply for teams","No sender rotation — less scalable than HeyReach for high-volume outreach","LinkedIn policy changes can break functionality without warning"], integrations:["HubSpot","Zapier","Google Sheets","Webhooks"], offer:"Dripify Free Trial", offerDetail:"7-day free trial. Plans from $39/user/mo.", offerValue:"FROM $39/USER/MO" },
+      { name:"Waalaxy", tag:"GROWTH", tagClass:"growth", score:73, trend:"+6.5", trendDir:"up", signal:64, tagline:"LinkedIn + email outreach for solo users and small teams", founded:"2019", stage:"Bootstrapped", hq:"Montpellier, France", url:"https://www.waalaxy.com", customers:[], pros:["Most beginner-friendly LinkedIn automation — intuitive UI with pre-built sequence templates","Combines LinkedIn and email in one workflow with built-in email finder","Free tier available — lowest barrier to entry in the LinkedIn automation space"], cons:["Browser extension-based — higher risk of LinkedIn detection vs cloud tools","Per-user pricing gets expensive as teams scale","Invitation limits per plan restrict high-volume outreach"], integrations:["HubSpot","Pipedrive","Zapier","Gmail","Outlook"], offer:"Waalaxy Free Plan", offerDetail:"Free plan with 80 invitations/month. Pro from €21/mo.", offerValue:"FREE 80 INVITES/MO" },
+      { name:"Mixmax", tag:"GROWTH", tagClass:"growth", score:72, trend:"+0.3", trendDir:"up", signal:52, tagline:"Revenue engagement from your inbox (Gmail only)", founded:"2014", stage:"Series B", hq:"San Francisco, CA", url:"https://www.mixmax.com", customers:["Canva","Meltwater"], pros:["Lives entirely inside Gmail — zero context switching","One-click scheduling and calendar features best-in-class","Easy setup — live in hours not weeks"], cons:["Gmail-only — no Outlook support limits adoption","Feature ceiling hits quickly for complex sales processes","Sequence analytics less robust than dedicated platforms"], integrations:["Salesforce","HubSpot","Gmail","Slack","Zoom","Vidyard","Dialpad","Pipedrive","Zapier"], offer:"Mixmax Free Plan", offerDetail:"Free plan for individual users.", offerValue:"FREE INDIVIDUAL PLAN" }
+    ]
+  },
+  "conversation": {
+    name: "Conversational AI & Intelligence", short: "CONVO AI",
+    tools: [
+      { name:"Gong", tag:"LEADER", tagClass:"leader", score:93, trend:"+2.1", trendDir:"up", signal:92, tagline:"Revenue intelligence platform — $252M Series E @ $7.25B", founded:"2015", stage:"Late-stage Private", hq:"San Francisco, CA", url:"https://www.gong.io", customers:["LinkedIn","Paychex","Hubspot","Sprinklr"], pros:["Best-in-class conversation analytics — widely considered the gold standard for call intelligence","AI-generated summaries and action items save reps hours of manual CRM updates weekly","Massive data network effects across 4,000+ customer base"], cons:["Premium pricing can exceed $150/user/month for full suite","Expanding beyond CI into forecasting creates product sprawl","Privacy and recording consent concerns in some jurisdictions"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Slack","Zoom","Teams","Google Meet","Snowflake","Tableau","LinkedIn"], offer:"Gong Startup Program", offerDetail:"Custom pricing for startups.", offerValue:"CUSTOM STARTUP PRICING" },
+      { name:"Granola", tag:"EMERGING", tagClass:"emerging", score:88, trend:"+24.0", trendDir:"up", signal:86, tagline:"AI notepad that augments your meeting notes", founded:"2023", stage:"Series A ($20M Spark Capital)", hq:"London, UK", url:"https://www.granola.ai", customers:[], pros:["Unique approach — augments your notes rather than replacing them","Privacy-first: no bot joining calls, works locally","Beautiful, minimal UX that feels delightful"], cons:["Very new — feature set still expanding rapidly","Not a full CI platform for revenue teams yet","Mac-only currently limits enterprise adoption"], integrations:["Zoom","Google Meet","Teams","Notion","Slack","Zapier","Salesforce"], offer:"Granola Free Tier", offerDetail:"Free plan with 25 meetings/month. Pro at $18/month.", offerValue:"25 FREE MEETINGS/MO" },
+      { name:"Drift (Clari)", tag:"LEADER", tagClass:"leader", score:87, trend:"+1.5", trendDir:"up", signal:82, tagline:"Revenue platform merging CI, forecasting, and conversational AI", founded:"2012", stage:"Late-stage Private", hq:"Sunnyvale, CA", url:"https://www.drift.com", customers:["Okta","Adobe","Qualtrics"], pros:["Best-in-class revenue forecasting with AI confidence scores","Unified pipeline, engagement (Groove), and conversation (Wingman) data","Strong exec-level dashboards for CRO and VP Sales"], cons:["Product complexity has grown with acquisitions","Forecasting value requires clean CRM data","Enterprise price point — not ideal for sub-50 seat teams"], integrations:["Salesforce","HubSpot","Outreach","Gong","Slack","Teams","Zoom","Gmail","Outlook","Snowflake"], offer:"Clari for Startups", offerDetail:"Early-stage pricing available.", offerValue:"STARTUP PRICING AVAILABLE" },
+      { name:"Fathom", tag:"EMERGING", tagClass:"emerging", score:83, trend:"+16.0", trendDir:"up", signal:82, tagline:"Free AI meeting recorder that reps love", founded:"2020", stage:"Series A ($17M Khosla)", hq:"San Francisco, CA", url:"https://fathom.video", customers:[], pros:["Completely free for individuals — best free CI tool available","AI highlights and action items surprisingly accurate","Minimal, fast UX — doesn't bloat meetings"], cons:["Team and enterprise features still early-stage","Lacks deep revenue intelligence that Gong provides","CRM sync less robust than established players"], integrations:["Zoom","Google Meet","Teams","Salesforce","HubSpot","Slack","Zapier"], offer:"Fathom Free", offerDetail:"100% free for individuals. Team Edition from $32/user/month.", offerValue:"FREE FOREVER (INDIVIDUAL)" },
+      { name:"Fireflies.ai", tag:"EMERGING", tagClass:"emerging", score:81, trend:"+9.8", trendDir:"up", signal:78, tagline:"AI meeting assistant with AskFred across all meetings", founded:"2016", stage:"Series B", hq:"San Francisco, CA", url:"https://fireflies.ai", customers:["Uber","Nike","Netflix"], pros:["Works across all meeting platforms with easy setup","Generous free tier makes it accessible for any team","AskFred AI lets you query across all meeting history"], cons:["Less sales-specific than Gong — more horizontal","Enterprise security features still maturing","Revenue-specific insights lighter than dedicated CI"], integrations:["Zoom","Google Meet","Teams","Slack","Salesforce","HubSpot","Notion","Asana","Zapier","Confluence"], offer:"Fireflies Free Plan", offerDetail:"Free plan with unlimited transcription and 800 min storage.", offerValue:"FREE UNLIMITED TRANSCRIPTION" },
+      { name:"Attention", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+16.5", trendDir:"up", signal:76, tagline:"AI that fills your CRM and coaches in real-time", founded:"2022", stage:"Series A (a16z, Eniac)", hq:"San Francisco, CA", url:"https://www.attention.tech", customers:[], pros:["Real-time coaching prompts during live calls — not just post-call analysis","Auto-fills CRM fields from conversation context with high accuracy","Cross-call insights identify winning patterns across your team"], cons:["Newer product still building enterprise feature depth","Competing for budget against established Gong/Clari","Real-time coaching can feel intrusive for experienced reps"], integrations:["Salesforce","HubSpot","Zoom","Google Meet","Teams","Slack","Outreach","Salesloft","Gong"], offer:"Attention Demo", offerDetail:"Free demo and trial available.", offerValue:"FREE TRIAL" },
+      { name:"Flow (Wispr)", tag:"EMERGING", tagClass:"emerging", score:79, trend:"+22.0", trendDir:"up", signal:74, tagline:"Voice-to-text AI that lets you work at the speed of speech", founded:"2022", stage:"Series A ($25M · Notable Capital, Menlo)", hq:"San Francisco, CA", url:"https://www.wisprflow.ai", customers:[], pros:["Turns speech into accurate text anywhere on your computer — not just meetings","Notable Capital portfolio company with strong product velocity","Privacy-first: processes locally, no cloud recording required"], cons:["Not a traditional CI tool — voice input rather than call analysis","Mac-only currently limits enterprise adoption","Still building awareness vs established CI players"], integrations:["macOS","Slack","Notion","Google Docs","Gmail"], offer:"Wispr Flow Download", offerDetail:"Free to download and try.", offerValue:"FREE DOWNLOAD" },
+      { name:"Sybill", tag:"EMERGING", tagClass:"emerging", score:78, trend:"+14.0", trendDir:"up", signal:70, tagline:"AI assistant that writes deal summaries and CRM updates", founded:"2020", stage:"Series A", hq:"San Francisco, CA", url:"https://www.sybill.ai", customers:[], pros:["Automatic CRM field updates from call analysis — zero manual entry","Deal summaries capture buyer sentiment and next steps","Behavior AI reads non-verbal cues for engagement scoring"], cons:["Niche positioning limits broader CI feature set","Smaller customer base vs Gong and Clari","Enterprise features still developing"], integrations:["Salesforce","HubSpot","Zoom","Google Meet","Teams","Slack","Outreach","Salesloft"], offer:"Sybill Starter", offerDetail:"Free trial available. Plans from $49/user/month.", offerValue:"FROM $49/USER/MO" },
+      { name:"CallRail", tag:"GROWTH", tagClass:"growth", score:78, trend:"+2.5", trendDir:"up", signal:72, tagline:"Call tracking and analytics for marketing attribution", founded:"2011", stage:"PE-backed", hq:"Atlanta, GA", url:"https://www.callrail.com", customers:["The Arbor Company","Express Employment"], pros:["Call tracking, recording, and transcription for marketing attribution","Conversation intelligence identifies keywords and lead quality","Strong for businesses where phone calls drive revenue"], cons:["More marketing attribution than sales CI","Less suited for B2B SaaS sales teams","Feature depth behind Gong for coaching"], integrations:["Salesforce","HubSpot","Google Ads","Facebook","Slack","Zapier","Google Analytics","Integromat"], offer:"CallRail Free Trial", offerDetail:"14-day free trial. From $45/mo.", offerValue:"FROM $45/MO" },
+      { name:"Momentum", tag:"EMERGING", tagClass:"emerging", score:77, trend:"+12.5", trendDir:"up", signal:68, tagline:"AI that automates post-call workflows and CRM updates", founded:"2021", stage:"Series A", hq:"San Francisco, CA", url:"https://momentum.io", customers:["Ramp"], pros:["Autopilot mode generates call summaries, CRM updates, and Slack notifications","Purpose-built for RevOps automation vs just recording","Strong Slack-native experience for async deal reviews"], cons:["Narrower than Gong — focused on post-call automation only","Brand awareness limited vs established CI players","Still proving ROI vs manual RevOps processes"], integrations:["Salesforce","HubSpot","Slack","Zoom","Google Meet","Teams","Gong","Outreach"], offer:"Momentum Demo", offerDetail:"Free demo and trial available.", offerValue:"FREE TRIAL" },
+      { name:"Aviso", tag:"GROWTH", tagClass:"growth", score:76, trend:"+4.0", trendDir:"up", signal:68, tagline:"AI revenue intelligence and forecasting platform", founded:"2014", stage:"Series D", hq:"Redwood City, CA", url:"https://www.aviso.com", customers:[], pros:["AI forecasting with strong predictive accuracy","Conversational intelligence with deal-level insights","Revenue workflow automation across the full funnel"], cons:["Complex implementation for smaller teams","Less brand recognition than Gong/Clari","Enterprise-oriented pricing"], integrations:["Salesforce","HubSpot","Slack","Zoom","Teams","Gmail","Outlook","Gong"], offer:"Aviso Demo", offerDetail:"Enterprise pricing. Demo available.", offerValue:"ENTERPRISE PRICING" },
+      { name:"Jiminny", tag:"GROWTH", tagClass:"growth", score:75, trend:"+5.0", trendDir:"up", signal:65, tagline:"Conversation intelligence with strong coaching features", founded:"2016", stage:"Series A", hq:"London, UK", url:"https://www.jiminny.com", customers:[], pros:["Automatic call recording, transcription, and AI summaries","Calendar sync auto-joins all meetings","Coaching scorecards and playlists for rep development"], cons:["Smaller market share than Gong or Fathom","Less advanced AI analytics","US market traction still growing"], integrations:["Salesforce","HubSpot","Slack","Google Calendar","Zoom","Microsoft Teams","Pipedrive"], offer:"Jiminny Free Trial", offerDetail:"14-day free trial available.", offerValue:"14-DAY FREE TRIAL" },
+      { name:"Avoma", tag:"GROWTH", tagClass:"growth", score:74, trend:"+2.8", trendDir:"up", signal:62, tagline:"End-to-end meeting lifecycle management", founded:"2017", stage:"Series A", hq:"Palo Alto, CA", url:"https://www.avoma.com", customers:[], pros:["Full meeting lifecycle — prep, recording, analysis, follow-up","Collaborative note-taking during calls is unique feature","More affordable than Gong"], cons:["Market share small — fewer community resources","AI analysis depth doesn't match Gong sophistication","Multi-language support limited"], integrations:["Salesforce","HubSpot","Zoom","Google Meet","Teams","Slack","Calendly","Pipedrive"], offer:"Avoma Free Plan", offerDetail:"Free plan with AI notes. Paid from $19/user/month.", offerValue:"FREE PLAN + $19/MO START" }
+    ]
+  },
+  "intent": {
+    name: "Intent & Buyer Signals", short: "INTENT",
+    tools: [
+      { name:"Clay", tag:"LEADER", tagClass:"leader", score:92, trend:"+22.5", trendDir:"up", signal:94, tagline:"Waterfall enrichment + intent across 75+ providers", founded:"2017", stage:"Series C ($100M · CapitalG, Sequoia)", hq:"New York, NY", url:"https://www.clay.com", customers:["OpenAI","Anthropic","Cursor","Canva"], pros:["Waterfall enrichment across 75+ providers captures signals others miss","AI agent researches custom intent triggers at scale","Created the GTM Engineering discipline"], cons:["Power user tool — steep learning curve","Credit costs add up at scale","Not a system of record"], integrations:["Salesforce","HubSpot","Outreach","Instantly","Apollo","ZoomInfo","OpenAI","Anthropic","Slack"], offer:"Clay Explorer", offerDetail:"Free 100 credits/mo.", offerValue:"FREE 100 CREDITS/MO" },
+      { name:"6sense", tag:"LEADER", tagClass:"leader", score:90, trend:"+2.3", trendDir:"up", signal:88, tagline:"AI account identification + intent @ $5.2B valuation", founded:"2013", stage:"Series E ($200M)", hq:"San Francisco, CA", url:"https://6sense.com", customers:["Zendesk","Cognizant","Dell"], pros:["Leading ABM platform — widely adopted by enterprise teams for predictive account targeting","Predictive AI segments accounts by buying stage (Awareness → Decision)","Revenue AI orchestrates cross-channel campaigns from intent signals"], cons:["Complex implementation requiring dedicated ops resources","Premium pricing with long-term enterprise contracts","Signal accuracy depends heavily on data volume in your vertical"], integrations:["Salesforce","HubSpot","Marketo","Outreach","Salesloft","Drift","LinkedIn","Google Ads","Slack","Snowflake","Tableau"], offer:"6sense Free Tools", offerDetail:"Free Chrome extension and basic account insights.", offerValue:"FREE CHROME EXTENSION" },
+      { name:"ZoomInfo", tag:"LEADER", tagClass:"leader", score:89, trend:"+0.5", trendDir:"up", signal:86, tagline:"Intent data via Bombora + own signals", founded:"2000", stage:"Public (ZI)", hq:"Waltham, MA", url:"https://www.zoominfo.com", customers:["PayPal","Snowflake","T-Mobile"], pros:["Combines first-party web signals with Bombora intent data","Org charts, technographics, and intent unified","Copilot AI surfaces high-intent accounts"], cons:["Premium pricing","Annual contracts","Intent signal accuracy varies by vertical"], integrations:["Salesforce","HubSpot","Outreach","Marketo","Slack","Snowflake"], offer:"ZoomInfo Free Community", offerDetail:"Free Community Edition.", offerValue:"FREE COMMUNITY" },
+      { name:"Bombora", tag:"LEADER", tagClass:"leader", score:85, trend:"+0.8", trendDir:"up", signal:82, tagline:"Original B2B intent data co-op powering the ecosystem", founded:"2014", stage:"PE-backed", hq:"New York, NY", url:"https://bombora.com", customers:["Salesforce","HubSpot"], pros:["Largest B2B intent data co-op with 5,000+ premium websites","Topic-level intent scoring is the industry standard","Powers intent for ZoomInfo, Salesforce, and many platforms"], cons:["Intent data is directional, not precise — false positives common","Self-serve analytics tools limited","Premium pricing for direct access"], integrations:["Salesforce","HubSpot","6sense","Demandbase","ZoomInfo","Outreach","Marketo","LinkedIn","Slack","Tableau"], offer:"Bombora Surge®", offerDetail:"Available through partner platforms or direct. Custom pricing.", offerValue:"CUSTOM ENTERPRISE PRICING" },
+      { name:"Demandbase", tag:"LEADER", tagClass:"leader", score:84, trend:"+1.0", trendDir:"up", signal:78, tagline:"Unified ABM + intent + advertising platform", founded:"2006", stage:"Late-stage Private", hq:"San Francisco, CA", url:"https://www.demandbase.com", customers:["Adobe","Palo Alto Networks"], pros:["Unified ABM + intent + advertising in a single platform","Strong IP-to-account mapping for website visitor identification","Account intelligence dashboard gives comprehensive per-account view"], cons:["Platform complexity requires significant onboarding","ABM focus limits utility for PLG or SMB motions","Can be overkill for teams not running sophisticated ABM"], integrations:["Salesforce","HubSpot","Marketo","Pardot","Outreach","Salesloft","Drift","Slack","LinkedIn","Google Ads","Bombora"], offer:"Demandbase Free Tools", offerDetail:"Free account intelligence Chrome extension.", offerValue:"FREE CHROME EXTENSION" },
+      { name:"Koala", tag:"EMERGING", tagClass:"emerging", score:83, trend:"+18.0", trendDir:"up", signal:80, tagline:"Intent signals built for PLG and product-led sales", founded:"2022", stage:"Series A ($16M Accel)", hq:"San Francisco, CA", url:"https://getkoala.com", customers:["Loom","Retool"], pros:["Purpose-built for PLG — combines product usage + third-party intent","Real-time Slack alerts when target accounts show buying signals","Beautiful, modern UI that reps actually use daily"], cons:["Best suited for PLG/hybrid — less relevant for pure enterprise outbound","Younger platform with still-maturing feature set","Smaller integration ecosystem"], integrations:["Salesforce","HubSpot","Slack","Segment","Clearbit","Outreach","Salesloft","Zapier"], offer:"Koala Free Plan", offerDetail:"Free plan for small teams with core intent signals.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Common Room", tag:"EMERGING", tagClass:"emerging", score:82, trend:"+12.0", trendDir:"up", signal:76, tagline:"Customer intelligence from community, social, and product signals", founded:"2020", stage:"Series B ($52M Greylock)", hq:"Seattle, WA", url:"https://www.commonroom.io", customers:["Figma","Asana","Notion"], pros:["Uniquely aggregates signals from community, social, GitHub, and product","Person-level intent vs just account-level for precise outreach","Identifies champions and influencers across digital channels"], cons:["Most valuable for dev tools and community-driven companies","Signal value diminishes without active online communities","Requires investment in community channels to generate data"], integrations:["Salesforce","HubSpot","Slack","Discord","GitHub","Twitter/X","LinkedIn","Outreach","Segment","Stack Overflow"], offer:"Common Room Free Plan", offerDetail:"Free plan for small teams with community monitoring.", offerValue:"FREE COMMUNITY TIER" },
+      { name:"G2 Buyer Intent", tag:"GROWTH", tagClass:"growth", score:82, trend:"+3.2", trendDir:"up", signal:86, tagline:"Intent from buyers actively researching your category", founded:"2012", stage:"Late-stage Private", hq:"Chicago, IL", url:"https://sell.g2.com", customers:[], pros:["Unique signal — actual buyers researching and comparing software","Highest-intent signal because visitors are actively evaluating","Review social proof drives both inbound and outbound"], cons:["Limited to software/tech categories on G2 marketplace","Cost of Buyer Intent substantial on top of review management","Signal volume depends on category traffic levels"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Slack","6sense","Demandbase","Marketo","LinkedIn"], offer:"G2 Free Profile", offerDetail:"Free profile on G2 marketplace. Buyer Intent requires paid plan.", offerValue:"FREE MARKETPLACE PROFILE" },
+      { name:"Pocus", tag:"EMERGING", tagClass:"emerging", score:81, trend:"+15.0", trendDir:"up", signal:78, tagline:"Revenue data platform for product-led sales", founded:"2021", stage:"Series B ($43M · Lightspeed, Bessemer)", hq:"New York, NY", url:"https://www.pocus.com", customers:["Miro","Webflow","Loom"], pros:["Unified signals from product, CRM, and third-party data for rep prioritization","Purpose-built for PLG-to-sales handoff — identifies sales-ready users","AI-powered playbooks automate PQL routing and outreach triggers"], cons:["Strongest for PLG motions — less useful for pure outbound orgs","Requires mature product analytics infrastructure to maximize value","Competing with Koala and Common Room in crowded signal space"], integrations:["Salesforce","HubSpot","Slack","Segment","Snowflake","Outreach","Salesloft","Clearbit","Amplitude"], offer:"Pocus Free Plan", offerDetail:"Free plan for small teams. Paid plans from $500/mo.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Warmly", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+14.0", trendDir:"up", signal:74, tagline:"Real-time website visitor deanonymization + AI chat", founded:"2020", stage:"Series B ($11M)", hq:"San Francisco, CA", url:"https://www.warmly.ai", customers:[], pros:["Real-time visitor identification with instant rep notification","AI chatbot engages high-intent visitors before they bounce","Combines deanonymization + orchestration in one platform"], cons:["Deanonymization accuracy varies by traffic type and region","Feature depth moderate in each area (chat, intent, orchestration)","Pricing scales with traffic volume"], integrations:["Salesforce","HubSpot","Slack","Outreach","Salesloft","Intercom","Drift","Zapier","Apollo","Clay"], offer:"Warmly Free Plan", offerDetail:"Free plan with up to 500 identified visitors/month.", offerValue:"500 FREE IDS/MO" },
+      { name:"Cognism", tag:"GROWTH", tagClass:"growth", score:80, trend:"+3.6", trendDir:"up", signal:74, tagline:"Intent signals with phone-verified contacts", founded:"2015", stage:"PE-backed", hq:"London, UK", url:"https://www.cognism.com", customers:["Seismic","Bombora"], pros:["Bombora intent data bundled with Diamond Data contacts","Best GDPR compliance for EU intent tracking","Intent + verified phones = actionable outbound triggers"], cons:["US intent data thinner than 6sense","Premium pricing","Less sophisticated AI than dedicated intent platforms"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Slack","Zapier"], offer:"Cognism Intent", offerDetail:"25 free verified leads.", offerValue:"25 FREE LEADS" },
+      { name:"Factors.ai", tag:"EMERGING", tagClass:"emerging", score:79, trend:"+11.4", trendDir:"up", signal:72, tagline:"Account intelligence and attribution", founded:"2020", stage:"Series A", hq:"Bangalore, India", url:"https://www.factors.ai", customers:[], pros:["Combines website deanonymization with multi-touch attribution","LinkedIn AdPilot integration optimizes ad spend","Competitive pricing vs US alternatives"], cons:["US brand awareness still growing","Feature depth maturing","Limited enterprise case studies outside APAC"], integrations:["Salesforce","HubSpot","Google Ads","LinkedIn","Slack","Segment","Google Analytics","Drift","Clearbit"], offer:"Factors.ai Free Plan", offerDetail:"Free plan with account identification.", offerValue:"FREE PLAN" },
+      { name:"Amplemarket", tag:"GROWTH", tagClass:"growth", score:77, trend:"+8.0", trendDir:"up", signal:70, tagline:"All-in-one with intent-driven lead scoring", founded:"2016", stage:"Series A ($12M · Y Combinator)", hq:"San Francisco, CA", url:"https://www.amplemarket.com", customers:[], pros:["AI lead scoring prioritizes highest-intent prospects","Combines prospecting, sequences, and intent in one platform","YC-backed with growing customer base"], cons:["Smaller brand vs Outreach/Salesloft","Feature depth doesn't match category leaders individually","Competing against very well-funded incumbents"], integrations:["Salesforce","HubSpot","Slack","LinkedIn","Gmail","Outlook","Zapier","Gong"], offer:"Amplemarket Demo", offerDetail:"Startup pricing available.", offerValue:"STARTUP PRICING" },
+      { name:"Leadfeeder (Dealfront)", tag:"GROWTH", tagClass:"growth", score:76, trend:"+3.0", trendDir:"up", signal:68, tagline:"Website visitor identification for lead generation", founded:"2012", stage:"Merged (Dealfront)", hq:"Helsinki, Finland", url:"https://www.leadfeeder.com", customers:["Elisa","Trustly"], pros:["Identifies companies visiting your website in real time","Integrates visitor data directly into CRM for follow-up","GDPR-compliant European alternative to US providers"], cons:["Company-level only — no individual contact identification","Merged into Dealfront creating product direction uncertainty","Feature depth behind 6sense and Demandbase"], integrations:["Salesforce","HubSpot","Pipedrive","Slack","Zapier","Google Analytics","Mailchimp"], offer:"Leadfeeder Free Plan", offerDetail:"Free plan with last 7 days of data.", offerValue:"FREE 7-DAY DATA" },
+      { name:"RB2B", tag:"EMERGING", tagClass:"emerging", score:76, trend:"+20.0", trendDir:"up", signal:70, tagline:"Person-level website visitor identification", founded:"2023", stage:"Seed", hq:"San Francisco, CA", url:"https://rb2b.com", customers:[], pros:["Person-level identification — sees individual visitors, not just companies","Real-time Slack notifications when target personas visit your site","Free tier with generous limits for small teams"], cons:["US-only — limited international coverage","Privacy concerns around person-level tracking","Data accuracy varies by traffic type"], integrations:["Slack","Salesforce","HubSpot","Zapier","Clay"], offer:"RB2B Free Plan", offerDetail:"Free plan available.", offerValue:"FREE PLAN" },
+      { name:"Lusha", tag:"GROWTH", tagClass:"growth", score:75, trend:"+1.8", trendDir:"up", signal:66, tagline:"Buyer intent signals on top of contact data", founded:"2016", stage:"Series B", hq:"Tel Aviv, Israel", url:"https://www.lusha.com", customers:["Zendesk","Yotpo"], pros:["Intent signals recently added on top of contact data","Simple Chrome extension for quick lookups","Competitive pricing"], cons:["Intent capabilities newer and less mature","Database smaller than ZoomInfo","Accuracy inconsistent outside tech"], integrations:["Salesforce","HubSpot","Outreach","Slack","Zapier"], offer:"Lusha Free Plan", offerDetail:"5 free credits/month.", offerValue:"5 FREE CREDITS/MO" },
+      { name:"Seamless.AI", tag:"GROWTH", tagClass:"growth", score:74, trend:"+2.0", trendDir:"up", signal:64, tagline:"Real-time contact search engine", founded:"2015", stage:"Series A", hq:"Columbus, OH", url:"https://seamless.ai", customers:[], pros:["Real-time search finds contacts not pre-stored in database","Autopilot automates list building at scale","Aggressive pricing makes it accessible"], cons:["Data accuracy hit-or-miss vs verified providers","UI clunky and overwhelming","Aggressive marketing damages brand trust"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gmail","Outlook","Zapier","Pipedrive"], offer:"Seamless Free Plan", offerDetail:"50 free credits to start.", offerValue:"50 FREE CREDITS" },
+      { name:"Lead Forensics", tag:"GROWTH", tagClass:"growth", score:74, trend:"+1.5", trendDir:"up", signal:64, tagline:"Enterprise website visitor identification", founded:"2009", stage:"PE-backed", hq:"London, UK", url:"https://www.leadforensics.com", customers:[], pros:["IP-to-company matching with contact details","Enterprise-grade compliance and security","Dedicated account management included"], cons:["Aggressive sales and long contracts","Technology less modern than newer alternatives","Premium pricing for IP lookup"], integrations:["Salesforce","HubSpot","Pipedrive","Slack","Zapier","Dynamics"], offer:"Lead Forensics Demo", offerDetail:"Contact for demo and pricing.", offerValue:"CUSTOM PRICING" },
+      { name:"Tofu", tag:"EMERGING", tagClass:"emerging", score:74, trend:"+18.0", trendDir:"up", signal:62, tagline:"AI content personalization from intent signals", founded:"2023", stage:"Seed (SignalFire)", hq:"San Francisco, CA", url:"https://www.tofuhq.com", customers:[], pros:["Personalizes content per buyer segment from intent data","Generates landing pages, emails, and case studies per persona","Bridges intent signals and content delivery"], cons:["Early stage with limited customers","Content quality depends on brand input","Narrow positioning"], integrations:["HubSpot","Salesforce","Marketo","Slack","Zapier"], offer:"Tofu Demo", offerDetail:"Startup pricing.", offerValue:"STARTUP PRICING" },
+      { name:"Snitcher", tag:"EMERGING", tagClass:"emerging", score:73, trend:"+8.0", trendDir:"up", signal:60, tagline:"Website visitor identification for SMBs", founded:"2015", stage:"Bootstrapped", hq:"Amsterdam, Netherlands", url:"https://snitcher.com", customers:[], pros:["Real-time visitor identification at affordable price point","Google Analytics integration enriches existing data","Simple setup with quick time-to-value"], cons:["Company-level only — no person identification","Smaller database than Leadfeeder/6sense","Limited integrations compared to enterprise tools"], integrations:["Google Analytics","Salesforce","HubSpot","Slack","Zapier"], offer:"Snitcher Free Trial", offerDetail:"14-day free trial. From $39/mo.", offerValue:"FROM $39/MO" },
+      { name:"Propensity", tag:"EMERGING", tagClass:"emerging", score:72, trend:"+9.0", trendDir:"up", signal:58, tagline:"ABM and intent platform for SMBs", founded:"2017", stage:"Series A", hq:"Lehi, UT", url:"https://propensity.com", customers:[], pros:["ABM-in-a-box approach makes intent accessible to smaller teams","Intent data from Bombora partnership","Ad campaigns and outreach triggered from intent signals"], cons:["Less sophisticated than 6sense/Demandbase","Smaller company with limited enterprise traction","US-focused data coverage"], integrations:["Salesforce","HubSpot","Outreach","Slack","Zapier","LinkedIn","Bombora"], offer:"Propensity Demo", offerDetail:"Demo available. Startup pricing.", offerValue:"STARTUP PRICING" }
+    ]
+  },
+  "gtm_eng": {
+    name: "GTM Engineering & Orchestration", short: "GTM ENG",
+    tools: [
+      { name:"Clay", tag:"LEADER", tagClass:"leader", score:94, trend:"+22.5", trendDir:"up", signal:96, tagline:"The creative canvas for GTM engineers — $3B valuation", founded:"2017", stage:"Series C ($100M @ $3B)", hq:"New York, NY", url:"https://www.clay.com", customers:["OpenAI","Anthropic","Cursor","Canva","Intercom"], pros:["Waterfall enrichment across 75+ providers is revolutionary","AI agent researches anything — company news, tech stack, custom fields","Created the GTM Engineering discipline — 10K+ customers incl OpenAI, Anthropic, Cursor"], cons:["Steep learning curve for non-technical teams","Credit consumption unpredictable and expensive at scale","Not a system of record — needs CRM and engagement underneath"], integrations:["Salesforce","HubSpot","Outreach","Instantly","Smartlead","Apollo","ZoomInfo","Clearbit","OpenAI","Anthropic","Slack","Webhooks","Lemlist"], offer:"Clay Explorer", offerDetail:"Free plan with 100 credits/month. Creator $149/mo.", offerValue:"FREE 100 CREDITS/MO" },
+      { name:"Zapier", tag:"LEADER", tagClass:"leader", score:88, trend:"+1.8", trendDir:"up", signal:90, tagline:"Universal automation connector with 7,000+ integrations", founded:"2011", stage:"Late-stage Private", hq:"San Francisco, CA", url:"https://zapier.com", customers:["Spotify","Adobe","Fox"], pros:["7,000+ app integrations — connects virtually everything","AI Actions and Canvas enable complex multi-step workflows","No-code interface accessible to entire GTM organization"], cons:["Complex workflows expensive at high task volume","Execution speed can lag for time-sensitive automations","Debugging multi-step Zaps frustrating without good logs"], integrations:["Everything — 7,000+ apps"], offer:"Zapier Free Plan", offerDetail:"Free plan with 100 tasks/month and 5 Zaps.", offerValue:"FREE 100 TASKS/MO" },
+      { name:"Claude Cowork", tag:"AI-NATIVE", tagClass:"ai-native", score:78, trend:"+30.0", trendDir:"up", signal:72, tagline:"Anthropic's desktop AI for file and task automation", founded:"2025", stage:"Part of Anthropic", hq:"San Francisco, CA", url:"https://claude.ai", customers:[], pros:["AI agent that works directly with files, docs, and desktop applications","Can automate multi-step GTM workflows across tools without code","Backed by Anthropic — frontier AI safety and capability"], cons:["Beta product still building feature depth","Desktop-only currently — limited to Mac","Not purpose-built for GTM — requires creative configuration"], integrations:["macOS","Files","Google Drive","Notion"], offer:"Claude Cowork", offerDetail:"Available with Claude Pro subscription.", offerValue:"CLAUDE PRO" },
+      { name:"Unify", tag:"EMERGING", tagClass:"emerging", score:82, trend:"+24.0", trendDir:"up", signal:82, tagline:"Intent-driven outbound orchestration platform", founded:"2023", stage:"Series A ($18M Emergence)", hq:"San Francisco, CA", url:"https://www.unifygtm.com", customers:[], pros:["Combines intent signals, enrichment, and outbound in one platform","AI Agents automate full prospecting → sequencing workflow","Purpose-built for GTM engineering motion"], cons:["Very early-stage — product still rapidly evolving","Limited enterprise deployment track record","Competing against well-funded Clay and incumbents"], integrations:["Salesforce","HubSpot","Slack","Outreach","Instantly","Smartlead","Apollo","Clay","OpenAI"], offer:"Unify Beta", offerDetail:"Early-stage pricing available.", offerValue:"STARTUP PRICING AVAILABLE" },
+      { name:"Make", tag:"GROWTH", tagClass:"growth", score:82, trend:"+5.2", trendDir:"up", signal:78, tagline:"Visual automation more powerful than Zapier for complex logic", founded:"2012", stage:"PE-backed", hq:"Prague, Czech Republic", url:"https://www.make.com", customers:["Cisco","Coca-Cola"], pros:["Visual scenario builder more powerful than Zapier for complex logic","Better value at scale — operations pricing more efficient","HTTP/webhook flexibility appeals to GTM engineers"], cons:["Fewer native integrations (1,800 vs 7,000+)","Steeper learning curve for non-technical users","US market awareness lags Zapier"], integrations:["Salesforce","HubSpot","Slack","Google Sheets","Airtable","OpenAI","Notion","Twilio","Stripe","Webhooks"], offer:"Make Free Plan", offerDetail:"Free plan with 1,000 operations/month.", offerValue:"FREE 1K OPS/MO" },
+      { name:"Retool", tag:"GROWTH", tagClass:"growth", score:82, trend:"+3.0", trendDir:"up", signal:78, tagline:"Low-code internal tool builder for ops teams", founded:"2017", stage:"Series D ($45M · Sequoia)", hq:"San Francisco, CA", url:"https://retool.com", customers:["Amazon","DoorDash","Mercedes-Benz","Brex","NBC"], pros:["Build custom GTM dashboards and admin panels without full-stack engineering","Connects to any database, API, or CRM with pre-built connectors","AI-powered app generation from natural language descriptions"], cons:["Requires some technical skill — not truly no-code","Not a GTM tool — needs configuration for sales/marketing use cases","Self-hosted option adds infrastructure complexity"], integrations:["Salesforce","HubSpot","PostgreSQL","Snowflake","Google Sheets","Slack","Twilio","Stripe","REST APIs"], offer:"Retool Free Plan", offerDetail:"Free for up to 5 users.", offerValue:"FREE UP TO 5 USERS" },
+      { name:"n8n", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+12.3", trendDir:"up", signal:74, tagline:"Open-source workflow automation with AI agent support", founded:"2019", stage:"Series B", hq:"Berlin, Germany", url:"https://n8n.io", customers:[], pros:["Open-source with self-hosting — full data control","Code-optional gives technical users maximum flexibility","AI agent workflows uniquely powerful for GTM automation"], cons:["Self-hosted requires DevOps resources","Cloud version younger with less enterprise features","Smaller community than Zapier/Make"], integrations:["Salesforce","HubSpot","Slack","Gmail","OpenAI","Anthropic","PostgreSQL","Google Sheets","Webhooks"], offer:"n8n Community", offerDetail:"Free self-hosted forever. Cloud from $20/mo.", offerValue:"FREE SELF-HOSTED" },
+      { name:"Linear", tag:"GROWTH", tagClass:"growth", score:80, trend:"+4.0", trendDir:"up", signal:74, tagline:"Project management increasingly used by GTM ops teams", founded:"2019", stage:"Series B ($35M · Accel)", hq:"San Francisco, CA", url:"https://linear.app", customers:["Vercel","Ramp","Coinbase"], pros:["Beautifully designed project tracking adopted by GTM ops and RevOps teams","Cycles, roadmaps, and triage workflows bring engineering discipline to GTM","API-first architecture enables deep automation"], cons:["Not a GTM tool — requires adaptation for sales/marketing workflows","No native CRM or engagement features","Primarily tech company adoption"], integrations:["Slack","GitHub","Figma","Zapier","Sentry","GitLab","Intercom"], offer:"Linear Free Plan", offerDetail:"Free for small teams.", offerValue:"FREE FOR SMALL TEAMS" },
+      { name:"Default", tag:"EMERGING", tagClass:"emerging", score:78, trend:"+16.0", trendDir:"up", signal:72, tagline:"Inbound lead routing and workflow automation", founded:"2022", stage:"Series A ($8M)", hq:"San Francisco, CA", url:"https://www.default.com", customers:[], pros:["Drag-and-drop workflow builder for inbound lead routing","Combines scheduling, enrichment, and routing in one flow","Built for modern GTM teams running inbound + PLG"], cons:["Focused on inbound — less useful for outbound-heavy teams","Young product with limited enterprise case studies","Integration depth still growing"], integrations:["Salesforce","HubSpot","Slack","Clearbit","Apollo","Calendly","Chili Piper","Zapier"], offer:"Default Free Plan", offerDetail:"Free plan available for small teams.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Pylon", tag:"EMERGING", tagClass:"emerging", score:77, trend:"+16.0", trendDir:"up", signal:68, tagline:"Customer operations platform for B2B", founded:"2022", stage:"Series A ($17M · Accel)", hq:"San Francisco, CA", url:"https://www.usepylon.com", customers:[], pros:["Unifies customer conversations across Slack Connect, email, and in-app","Purpose-built for B2B customer-facing teams in shared Slack channels","Strong traction in dev tools and infrastructure companies"], cons:["Niche use case — Slack-first support","Less relevant for traditional sales engagement","Still building enterprise features"], integrations:["Slack","Salesforce","HubSpot","Linear","Jira","Intercom","Zapier"], offer:"Pylon Demo", offerDetail:"Contact for pricing.", offerValue:"CUSTOM PRICING" },
+      { name:"Gumloop", tag:"EMERGING", tagClass:"emerging", score:76, trend:"+18.0", trendDir:"up", signal:68, tagline:"Visual AI automation platform for GTM workflows", founded:"2023", stage:"Seed (Y Combinator)", hq:"San Francisco, CA", url:"https://www.gumloop.com", customers:[], pros:["Visual drag-and-drop builder for AI-powered automations","Connects LLMs, web scraping, and data tools in one flow","YC-backed with strong early traction in GTM community"], cons:["Very early-stage product","Less mature than Zapier/Make for non-AI workflows","Small integration library"], integrations:["OpenAI","Anthropic","Slack","Google Sheets","Webhooks","Gmail"], offer:"Gumloop Free Plan", offerDetail:"Free plan with limited runs.", offerValue:"FREE PLAN" },
+      { name:"Dust", tag:"EMERGING", tagClass:"emerging", score:75, trend:"+14.0", trendDir:"up", signal:64, tagline:"AI assistant platform connecting LLMs to company data", founded:"2023", stage:"Series A ($16M · Sequoia)", hq:"Paris, France", url:"https://dust.tt", customers:[], pros:["Connects company knowledge (Notion, Slack, Drive) to LLMs for grounded AI assistants","Custom AI agents for GTM workflows with full data context","Sequoia-backed with strong technical founding team"], cons:["Early-stage with limited GTM-specific features","Requires data infrastructure investment to maximize value","Competing against larger platforms (OpenAI, Anthropic) for AI assistant budget"], integrations:["Slack","Notion","Google Drive","GitHub","Intercom","Salesforce"], offer:"Dust Free Plan", offerDetail:"Free plan for small teams.", offerValue:"FREE PLAN" },
+      { name:"Tray.io", tag:"GROWTH", tagClass:"growth", score:74, trend:"-0.5", trendDir:"down", signal:58, tagline:"Enterprise integration and automation platform", founded:"2012", stage:"Series D", hq:"San Francisco, CA", url:"https://tray.io", customers:[], pros:["Enterprise-grade with SOC 2, HIPAA compliance","Powerful for complex multi-system data orchestration","Merlin AI builds integrations with natural language"], cons:["Enterprise pricing ($995+/mo) out of reach for startups","UI complexity makes simple tasks harder than necessary","Market shifting toward more accessible alternatives"], integrations:["Salesforce","HubSpot","Marketo","Snowflake","Slack","Workday","NetSuite","ServiceNow","Jira","SAP"], offer:"Tray.io Enterprise", offerDetail:"Enterprise pricing starts at $995/mo.", offerValue:"FROM $995/MO" },
+      { name:"Relay.app", tag:"EMERGING", tagClass:"emerging", score:74, trend:"+12.0", trendDir:"up", signal:60, tagline:"Human-in-the-loop workflow automation", founded:"2022", stage:"Series A", hq:"San Francisco, CA", url:"https://relay.app", customers:[], pros:["Automation with built-in human approval steps — critical for GTM quality","Collaborative multiplayer automations across team members","Clean UI that's more approachable than n8n for non-technical users"], cons:["Fewer integrations than Zapier/Make","Still building enterprise features","Small but growing user base"], integrations:["Slack","Gmail","Google Sheets","HubSpot","Salesforce","OpenAI","Zapier"], offer:"Relay Free Plan", offerDetail:"Free plan with limited tasks.", offerValue:"FREE PLAN" },
+      { name:"Collective[i]", tag:"EMERGING", tagClass:"emerging", score:72, trend:"+5.0", trendDir:"up", signal:58, tagline:"AI revenue optimization with network intelligence", founded:"2014", stage:"Growth stage", hq:"New York, NY", url:"https://www.collectivei.com", customers:[], pros:["Network intelligence leverages anonymized data across customer base","AI forecasting with external signal integration","Automated CRM data entry and enrichment"], cons:["Opaque network data model raises questions","Smaller adoption vs established forecasting tools","Complex value proposition to communicate"], integrations:["Salesforce","HubSpot","Slack","Outlook","Gmail"], offer:"Collective[i] Demo", offerDetail:"Contact for demo.", offerValue:"CUSTOM PRICING" }
+    ]
+  },
+  "demos": {
+    name: "Demo & Sales Enablement", short: "DEMOS",
+    tools: [
+      { name:"Arcade", tag:"EMERGING", tagClass:"emerging", score:84, trend:"+20.0", trendDir:"up", signal:82, tagline:"Interactive product demos that sell for you", founded:"2022", stage:"Series A ($12M a16z)", hq:"San Francisco, CA", url:"https://www.arcade.software", customers:["Loom","Notion"], pros:["Create interactive demos in minutes with no-code editor","Demos embed anywhere — website, emails, sequences, social","Analytics show exactly which features drive engagement"], cons:["Best for top-of-funnel demos — not deep POC environments","Customization limits for complex enterprise product demos","Young company with smaller customer base"], integrations:["HubSpot","Salesforce","Slack","Outreach","Salesloft","Marketo","Google Analytics","Zapier"], offer:"Arcade Free Plan", offerDetail:"Free plan to create up to 3 demos.", offerValue:"3 FREE DEMOS" },
+      { name:"Consensus", tag:"GROWTH", tagClass:"growth", score:83, trend:"+8.5", trendDir:"up", signal:80, tagline:"Automated video demos that qualify buyers", founded:"2013", stage:"Series B", hq:"Atlanta, GA", url:"https://www.goconsensus.com", customers:["Autodesk","Boomi"], pros:["Async video demos let buyers self-educate on their own time — reduces sales cycle","Analytics reveal exactly which features each stakeholder cares about most","One of the most widely adopted demo tools among enterprise GTM teams"], cons:["Video-based demos less interactive than live sandbox alternatives","Requires significant upfront investment in demo video creation","Category getting crowded with interactive demo tools eating market share"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gong","Slack","Marketo","Vidyard"], offer:"Consensus Demo", offerDetail:"Free demo available. Custom pricing.", offerValue:"CUSTOM PRICING" },
+      { name:"Navattic", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+12.5", trendDir:"up", signal:74, tagline:"No-code interactive product demos for marketing", founded:"2020", stage:"Series A", hq:"New York, NY", url:"https://www.navattic.com", customers:["Logitech","Coupa"], pros:["Capture and customize product screens without engineering","Strong analytics on demo engagement and drop-off points","Marketing-focused — designed to live on websites and landing pages"], cons:["Less suited for sales-led, live demo environments","Limited interactivity compared to actual product sandbox","Requires ongoing maintenance as product UI evolves"], integrations:["HubSpot","Salesforce","Marketo","Google Analytics","Segment","Slack","Zapier"], offer:"Navattic Free Trial", offerDetail:"Free trial available.", offerValue:"FREE TRIAL" },
+      { name:"TestBox", tag:"EMERGING", tagClass:"emerging", score:79, trend:"+14.0", trendDir:"up", signal:72, tagline:"Live sandbox POC environments for every buyer", founded:"2021", stage:"Series A (SignalFire)", hq:"Boston, MA", url:"https://www.testbox.com", customers:[], pros:["Delivers hands-on product experience tailored to buyer's role","Pre-populated with relevant data for each prospect's use case","Converts interest into intent by letting buyers try before buying"], cons:["Complex to set up for products with deep customization","Narrow use case limits broader market applicability","Requires significant product investment to maintain sandboxes"], integrations:["Salesforce","HubSpot","Slack","Gong","Intercom","Zapier"], offer:"TestBox Demo", offerDetail:"Custom pricing based on product complexity.", offerValue:"CUSTOM PRICING" },
+      { name:"Demostack", tag:"GROWTH", tagClass:"growth", score:78, trend:"+5.5", trendDir:"up", signal:68, tagline:"Customizable demo environments for enterprise sales", founded:"2020", stage:"Series A", hq:"Tel Aviv, Israel", url:"https://www.demostack.com", customers:["Pendo","Gorgias"], pros:["Creates full demo environments cloned from your product","Customization per deal/prospect for highly personalized demos","Analytics track prospect engagement with specific features"], cons:["Complex setup compared to lighter alternatives like Arcade","Pricing targets enterprise — not startup-friendly","Requires dedicated demo engineering resources"], integrations:["Salesforce","HubSpot","Slack","Gong","Outreach","Salesloft","Okta"], offer:"Demostack Demo", offerDetail:"Request a personalized demo.", offerValue:"CUSTOM PRICING" },
+      { name:"Walnut", tag:"EMERGING", tagClass:"emerging", score:78, trend:"+12.0", trendDir:"up", signal:70, tagline:"No-code interactive product demos with branding", founded:"2020", stage:"Series B ($35M · Felicis)", hq:"Tel Aviv, Israel", url:"https://www.walnut.io", customers:["NetSuite","Namogoo"], pros:["Capture and customize real product UI without engineering involvement","Strong adoption growth — increasingly chosen over video-based demo alternatives","Built-in branding and personalization per prospect"], cons:["Requires maintenance as product UI evolves — demos can break","Less sophisticated analytics than Consensus or Demostack","Crowded category with Arcade, Navattic, Storylane all competing"], integrations:["Salesforce","HubSpot","Slack","Outreach","Marketo","Google Analytics","Zapier"], offer:"Walnut Free Plan", offerDetail:"Free plan available for small teams.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Storylane", tag:"EMERGING", tagClass:"emerging", score:77, trend:"+10.0", trendDir:"up", signal:66, tagline:"Interactive demo platform for PLG and marketing", founded:"2021", stage:"Series A", hq:"San Francisco, CA", url:"https://www.storylane.io", customers:[], pros:["Quick setup — capture and share interactive demos fast","HTML-based demos load faster than image-based alternatives","Affordable alternative to Demostack for smaller teams"], cons:["Less sophisticated than Demostack for complex products","Analytics more basic than competitors","Smaller customer base and community"], integrations:["HubSpot","Salesforce","Slack","Marketo","Google Analytics","Zapier","Intercom"], offer:"Storylane Free Plan", offerDetail:"Free plan with limited demos.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Showpad", tag:"GROWTH", tagClass:"growth", score:76, trend:"+1.2", trendDir:"up", signal:64, tagline:"Revenue enablement combining content and coaching", founded:"2011", stage:"PE-backed", hq:"Ghent, Belgium", url:"https://www.showpad.com", customers:["Johnson & Johnson"], pros:["Good balance of content management and coaching features","Collaborative Spaces for buyer engagement","More accessible than Seismic/Highspot for mid-market"], cons:["Product innovation pace has slowed under PE ownership","Market positioning squeezed between SMB and enterprise","Integration depth less than top-tier competitors"], integrations:["Salesforce","HubSpot","Outlook","Gmail","Slack","Teams","Google Drive","Box","SharePoint"], offer:"Showpad Free Trial", offerDetail:"Free trial available. Plans on request.", offerValue:"FREE TRIAL" }
+    ]
+  },
+  "analytics": {
+    name: "RevOps & Enablement", short: "REV OPS",
+    tools: [
+      { name:"HockeyStack", tag:"EMERGING", tagClass:"emerging", score:88, trend:"+18.0", trendDir:"up", signal:88, tagline:"No-code revenue attribution for B2B", founded:"2020", stage:"Series B ($25M Bessemer)", hq:"San Francisco, CA", url:"https://hockeystack.com", customers:[], pros:["Unified attribution across marketing, sales, and product touchpoints","No-code setup — doesn't require a data team to implement","Buyer journey visualization makes pipeline analysis intuitive"], cons:["Rapid growth = product evolving quickly, occasional instability","Attribution models only as good as tracking implementation","Premium pricing for full feature set"], integrations:["Salesforce","HubSpot","Google Ads","LinkedIn","Facebook","Slack","Segment","Snowflake","Google Analytics","Marketo"], offer:"HockeyStack Demo", offerDetail:"Custom pricing based on company size and data volume.", offerValue:"CUSTOM PRICING" },
+      { name:"Highspot", tag:"LEADER", tagClass:"leader", score:86, trend:"+1.5", trendDir:"up", signal:80, tagline:"AI-powered sales enablement platform", founded:"2012", stage:"Late-stage ($3.5B val)", hq:"Seattle, WA", url:"https://www.highspot.com", customers:["Siemens","GM","Nestle"], pros:["Top-rated sales enablement platform by enterprise teams","AI-powered content recommendations per deal stage and persona","Strong analytics on which content drives revenue"], cons:["Enterprise pricing and implementation complexity","Adoption requires significant change management","Competing with Seismic in commoditizing space"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Gong","Slack","Gmail","Outlook","Teams","Google Drive","SharePoint"], offer:"Highspot Demo", offerDetail:"Enterprise pricing.", offerValue:"ENTERPRISE PRICING" },
+      { name:"Seismic", tag:"LEADER", tagClass:"leader", score:85, trend:"+1.0", trendDir:"up", signal:78, tagline:"Enterprise sales enablement and content intelligence", founded:"2010", stage:"Late-stage Private", hq:"San Diego, CA", url:"https://seismic.com", customers:["IBM","American Express"], pros:["Deep content automation personalizes assets per deal and persona","LiveSocial enables compliant social selling at scale","Comprehensive enablement with training, content, analytics"], cons:["Complex implementation — 3-6 month rollout","Premium pricing not suited for SMB","Feature overlap with CRM and CMS"], integrations:["Salesforce","HubSpot","Outlook","Gmail","Slack","Teams","Google Drive","SharePoint","Gong"], offer:"Seismic Demo", offerDetail:"Enterprise pricing.", offerValue:"ENTERPRISE PRICING" },
+      { name:"Dreamdata", tag:"GROWTH", tagClass:"growth", score:82, trend:"+8.5", trendDir:"up", signal:76, tagline:"B2B revenue attribution with strong LinkedIn attribution", founded:"2018", stage:"Series A", hq:"Copenhagen, Denmark", url:"https://www.dreamdata.io", customers:[], pros:["Clean account-level attribution across full buyer journey","LinkedIn attribution particularly strong and differentiated","Transparent methodology shows exactly how credit assigned"], cons:["Smaller company — less market presence than HockeyStack","Implementation requires careful CRM and ad platform setup","US traction growing but behind US-based competitors"], integrations:["Salesforce","HubSpot","Google Ads","LinkedIn","Facebook","G2","Slack","Google Analytics","BigQuery"], offer:"Dreamdata Free", offerDetail:"Free plan for companies under $1M ARR.", offerValue:"FREE UNDER $1M ARR" },
+      { name:"Scratchpad", tag:"EMERGING", tagClass:"emerging", score:82, trend:"+10.0", trendDir:"up", signal:78, tagline:"Pipeline management layer on top of Salesforce", founded:"2020", stage:"Series B ($33M · Accel)", hq:"San Francisco, CA", url:"https://www.scratchpad.com", customers:["Notion","Cisco","Salesloft"], pros:["Incredibly intuitive interface — reps actually update pipeline without friction","Among the highest-rated forecasting and pipeline tools by enterprise sales teams","Salesforce-native overlay eliminates context-switching for pipeline hygiene"], cons:["Salesforce-only limits addressable market","Positioned as pipeline hygiene, not full forecasting platform","Competing with Clari/Gong expanding into same territory"], integrations:["Salesforce","Slack","Outreach","Salesloft","Gong","Clari"], offer:"Scratchpad Free Plan", offerDetail:"Free plan for individual reps.", offerValue:"FREE INDIVIDUAL PLAN" },
+      { name:"MuleSoft", tag:"LEADER", tagClass:"leader", score:82, trend:"+0.5", trendDir:"up", signal:76, tagline:"API integration platform for enterprise data orchestration", founded:"2006", stage:"Part of Salesforce", hq:"San Francisco, CA", url:"https://www.mulesoft.com", customers:["Coca-Cola","Unilever","Cisco","GE"], pros:["Pre-built connectors for 1,500+ systems including all major CRMs and ERPs","Anypoint Platform is the enterprise integration standard","Salesforce ownership ensures deep native CRM integration"], cons:["Enterprise pricing and implementation complexity","Requires dedicated integration architects","Overkill for simple GTM automations"], integrations:["Salesforce","SAP","Workday","ServiceNow","AWS","Azure","Snowflake","Slack","Oracle","NetSuite"], offer:"MuleSoft Demo", offerDetail:"Enterprise pricing.", offerValue:"ENTERPRISE PRICING" },
+      { name:"TigerEye", tag:"EMERGING", tagClass:"emerging", score:79, trend:"+14.0", trendDir:"up", signal:72, tagline:"AI-powered territory and quota planning", founded:"2021", stage:"Series A", hq:"San Francisco, CA", url:"https://www.tigereye.com", customers:[], pros:["AI models simulate territory and quota scenarios in minutes","Replaces months of spreadsheet-based territory planning","Visual territory mapping with constraint optimization"], cons:["Narrow RevOps use case — territory planning only","Requires clean CRM data for accurate modeling","Enterprise-focused pricing"], integrations:["Salesforce","HubSpot","Snowflake","Slack","Google Sheets"], offer:"TigerEye Demo", offerDetail:"Free demo and proof of concept available.", offerValue:"FREE POC" },
+      { name:"People.ai", tag:"GROWTH", tagClass:"growth", score:77, trend:"+2.0", trendDir:"up", signal:68, tagline:"Revenue intelligence from activity capture", founded:"2016", stage:"Series D ($100M · a16z, Lightspeed)", hq:"San Francisco, CA", url:"https://www.people.ai", customers:["Zoom","Okta","Pendo"], pros:["Automatic activity capture eliminates manual CRM logging across email, calendar, calls","Relationship mapping shows who on your team is engaging which contacts at each account","Strong enterprise customer base with proven deployments at large-scale sales orgs"], cons:["Activity data alone doesn't predict outcomes — needs deal intelligence layer","Premium pricing for what some see as a feature vs standalone platform","Market shifting toward CI tools (Gong, Clari) that include activity capture"], integrations:["Salesforce","HubSpot","Outreach","Salesloft","Slack","Gmail","Outlook","Zoom","Teams"], offer:"People.ai Demo", offerDetail:"Enterprise pricing. Demo available on request.", offerValue:"ENTERPRISE PRICING" },
+      { name:"Momentum", tag:"EMERGING", tagClass:"emerging", score:77, trend:"+12.5", trendDir:"up", signal:68, tagline:"AI that automates post-call workflows and CRM updates", founded:"2021", stage:"Series A", hq:"San Francisco, CA", url:"https://momentum.io", customers:["Ramp"], pros:["Autopilot generates summaries, CRM updates, and Slack alerts","Purpose-built for RevOps automation vs just recording","Strong Slack-native experience for async deal reviews"], cons:["Narrower than Gong — post-call automation only","Limited brand awareness","Still proving ROI vs manual RevOps"], integrations:["Salesforce","HubSpot","Slack","Zoom","Google Meet","Teams","Gong","Outreach"], offer:"Momentum Demo", offerDetail:"Free trial available.", offerValue:"FREE TRIAL" },
+      { name:"Weflow", tag:"EMERGING", tagClass:"emerging", score:76, trend:"+8.0", trendDir:"up", signal:64, tagline:"Revenue execution and pipeline inspection", founded:"2020", stage:"Series A", hq:"Berlin, Germany", url:"https://www.weflow.io", customers:[], pros:["Pipeline inspection and deal management in clean UI","Salesforce-native approach with automatic activity capture","Affordable alternative to Clari for pipeline visibility"], cons:["Salesforce-only limits addressable market","Feature depth less than Clari/Gong for forecasting","Smaller team and slower feature velocity"], integrations:["Salesforce","Slack","Zoom","Google Meet","Teams","Gmail","Outlook"], offer:"Weflow Free Plan", offerDetail:"Free plan for up to 5 users.", offerValue:"FREE UP TO 5 USERS" },
+      { name:"Aviso", tag:"GROWTH", tagClass:"growth", score:76, trend:"+4.0", trendDir:"up", signal:68, tagline:"AI revenue intelligence and forecasting", founded:"2014", stage:"Series D", hq:"Redwood City, CA", url:"https://www.aviso.com", customers:[], pros:["AI forecasting with strong predictive accuracy","Revenue workflow automation across the full funnel","Activity intelligence captures engagement patterns"], cons:["Complex implementation for smaller teams","Less brand recognition than Gong/Clari","Enterprise-oriented pricing"], integrations:["Salesforce","HubSpot","Slack","Zoom","Teams","Gmail","Outlook","Gong"], offer:"Aviso Demo", offerDetail:"Enterprise pricing.", offerValue:"ENTERPRISE PRICING" },
+      { name:"Coefficient", tag:"EMERGING", tagClass:"emerging", score:75, trend:"+8.2", trendDir:"up", signal:62, tagline:"Live CRM data in Google Sheets and Excel", founded:"2020", stage:"Series A", hq:"San Francisco, CA", url:"https://coefficient.io", customers:[], pros:["Pulls live CRM and database data directly into spreadsheets","Perfect for RevOps teams who live in spreadsheets","GPT formula builder simplifies complex analyses"], cons:["Spreadsheet approach has inherent scale limitations","Not a full BI platform — more of a connector","Limited visualization vs dedicated analytics tools"], integrations:["Salesforce","HubSpot","Google Sheets","Excel","Snowflake","MySQL","PostgreSQL","Slack","Looker"], offer:"Coefficient Free", offerDetail:"Free plan with limited syncs.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"Ebsta", tag:"EMERGING", tagClass:"emerging", score:75, trend:"+7.0", trendDir:"up", signal:64, tagline:"Revenue intelligence with relationship scoring", founded:"2012", stage:"Series A", hq:"London, UK", url:"https://www.ebsta.com", customers:[], pros:["Relationship scoring shows engagement health per deal","Forecasting based on actual buyer engagement patterns","Salesforce-native with deep bi-directional integration"], cons:["Primarily Salesforce ecosystem","Less known than Clari/Gong in US","Smaller feature set than full CI platforms"], integrations:["Salesforce","Gmail","Outlook","Slack","Google Calendar"], offer:"Ebsta Demo", offerDetail:"Demo available. Custom pricing.", offerValue:"CUSTOM PRICING" },
+      { name:"Scalestack", tag:"EMERGING", tagClass:"emerging", score:74, trend:"+10.0", trendDir:"up", signal:60, tagline:"AI-driven data scoring and enrichment for RevOps", founded:"2022", stage:"Seed", hq:"San Francisco, CA", url:"https://www.scalestack.io", customers:[], pros:["AI scores and enriches CRM data for better segmentation","Identifies high-potential accounts from messy datasets","Helps RevOps teams clean and prioritize pipeline"], cons:["Early-stage with limited market presence","Overlaps with Clay and data enrichment tools","Enterprise features still developing"], integrations:["Salesforce","HubSpot","Snowflake","Slack","Zapier"], offer:"Scalestack Demo", offerDetail:"Free demo available.", offerValue:"FREE DEMO" }
+    ]
+  },
+  "scheduling": {
+    name: "Scheduling & Lead Routing", short: "SCHEDULING",
+    tools: [
+      { name:"Chili Piper", tag:"LEADER", tagClass:"leader", score:89, trend:"+3.5", trendDir:"up", signal:86, tagline:"Instant inbound scheduling and smart lead routing", founded:"2016", stage:"Series B", hq:"New York, NY", url:"https://www.chilipiper.com", customers:["Intuit","Gong","Spotify"], pros:["Concierge instantly qualifies and routes inbound leads 2-3x conversion lift","Handoff eliminates round-robin chaos with smart routing logic","Form Concierge, Distro, and Handoff cover full inbound funnel"], cons:["Premium pricing — $30-80+/user/month depending on product","Best for inbound-heavy motions — less relevant for pure outbound","Implementation requires careful routing rule mapping"], integrations:["Salesforce","HubSpot","Marketo","Outreach","Salesloft","Slack","Zoom","Google Calendar","Outlook","Drift"], offer:"Chili Piper Instant Booker", offerDetail:"Free Instant Booker for 1 user.", offerValue:"FREE INSTANT BOOKER" },
+      { name:"Calendly", tag:"LEADER", tagClass:"leader", score:87, trend:"+1.8", trendDir:"up", signal:88, tagline:"Scheduling automation — everyone knows how to use it", founded:"2013", stage:"Late-stage Private ($3B val)", hq:"Atlanta, GA", url:"https://calendly.com", customers:["Twilio","eBay","Dropbox"], pros:["Best-in-class scheduling UX — universal brand recognition","Routing Forms qualify and distribute leads before booking","Massive adoption reduces friction for every prospect"], cons:["Advanced routing less powerful than Chili Piper","Team features require Professional/Teams plan at higher cost","Not purpose-built for sales — more horizontal"], integrations:["Salesforce","HubSpot","Google Calendar","Outlook","Slack","Zoom","Teams","Zapier","Stripe","PayPal"], offer:"Calendly Free Plan", offerDetail:"Free for 1 event type with unlimited meetings.", offerValue:"FREE PLAN AVAILABLE" },
+      { name:"RevenueHero", tag:"EMERGING", tagClass:"emerging", score:80, trend:"+16.0", trendDir:"up", signal:74, tagline:"Pipeline acceleration for inbound revenue teams", founded:"2022", stage:"Series A ($5.8M)", hq:"San Francisco, CA", url:"https://www.revenuehero.io", customers:[], pros:["Instant scheduling + real-time qualification in one flow","More affordable alternative to Chili Piper with similar core features","Built-in analytics show conversion impact clearly"], cons:["Younger product with less enterprise validation","Integration ecosystem still growing","Brand awareness much lower than Calendly/Chili Piper"], integrations:["Salesforce","HubSpot","Slack","Google Calendar","Outlook","Zoom","Marketo","Zapier"], offer:"RevenueHero Starter", offerDetail:"Free trial. Plans from $25/user/month.", offerValue:"FROM $25/USER/MO" },
+      { name:"LeanData", tag:"GROWTH", tagClass:"growth", score:81, trend:"+1.5", trendDir:"up", signal:72, tagline:"Revenue orchestration and lead-to-account matching", founded:"2012", stage:"Acquired by ZoomInfo", hq:"Sunnyvale, CA", url:"https://www.leandata.com", customers:["Clearbit"], pros:["Best-in-class lead-to-account matching for ABM motions","Visual routing flow builder is powerful and intuitive","Now part of ZoomInfo — strong bundling opportunity"], cons:["Salesforce-only — no HubSpot support","ZoomInfo acquisition creates standalone uncertainty","Enterprise pricing prohibitive for smaller teams"], integrations:["Salesforce","Marketo","ZoomInfo","6sense","Demandbase","Outreach","Salesloft","Drift"], offer:"LeanData via ZoomInfo", offerDetail:"Available as part of ZoomInfo Operations.", offerValue:"BUNDLED W/ ZOOMINFO" },
+      { name:"Qualified", tag:"GROWTH", tagClass:"growth", score:82, trend:"+5.0", trendDir:"up", signal:76, tagline:"AI-powered pipeline generation for enterprise websites", founded:"2018", stage:"Series C ($95M · Sequoia, Tiger Global, Salesforce)", hq:"San Francisco, CA", url:"https://www.qualified.com", customers:["VMware","Poly"], pros:["AI chatbot Piper qualifies and books meetings from website visitors instantly","Deep Salesforce-native architecture — purpose-built for enterprise Salesforce orgs","Backed by Sequoia and Tiger Global with Salesforce Ventures strategic investment"], cons:["Salesforce-only limits addressable market to SF ecosystem","Premium enterprise pricing — not viable for SMB/startup","Competing against Drift/Intercom and emerging tools like Warmly"], integrations:["Salesforce","Outreach","Salesloft","6sense","Demandbase","Slack","Marketo","Pardot","Google Analytics"], offer:"Qualified Demo", offerDetail:"Free demo. Enterprise pricing on request.", offerValue:"ENTERPRISE PRICING" }
+    ]
+  }
+};
+
+// ═══ COLOR MAPS ═══
+const IC={Salesforce:"#00A1E0",HubSpot:"#FF7A59",Slack:"#4A154B",Gmail:"#EA4335",Outlook:"#0078D4",Zoom:"#2D8CFF","Google Meet":"#00897B","Microsoft Teams":"#6264A7",Teams:"#6264A7",LinkedIn:"#0A66C2","LinkedIn Sales Nav":"#0A66C2",Gong:"#7C3AED",Outreach:"#5951FF",Salesloft:"#00B388",Marketo:"#5C4C9F",Snowflake:"#29B5E8",Tableau:"#E97627",Zapier:"#FF4A00",Stripe:"#635BFF",Shopify:"#96BF48","Google Ads":"#4285F4",Facebook:"#1877F2","Facebook Ads":"#1877F2",Segment:"#52BD94",Notion:"#000000",Airtable:"#18BFFF",OpenAI:"#10A37F",Anthropic:"#D4A574",Intercom:"#1F8DED",Drift:"#0176FF",Jira:"#0052CC",Zendesk:"#03363D",DocuSign:"#FFCD00",Clay:"#E8734A",Apollo:"#6C5CE7",ZoomInfo:"#21327B",Clearbit:"#4166F5",Calendly:"#006BFF","Google Workspace":"#4285F4","Microsoft 365":"#D83B01",Twilio:"#F22F46",Pipedrive:"#017737",BigQuery:"#4386FA",Redshift:"#8C4FFF",Databricks:"#FF3621",dbt:"#FF694A",Make:"#6D00CC",API:"#64748b",Webhooks:"#556380",WordPress:"#21759B",WooCommerce:"#96588A","Google Analytics":"#E37400",Amplitude:"#1E61F0",Mixpanel:"#7856FF",Braze:"#E83B3D",Iterable:"#00C2A0",Pardot:"#00A1DF","Instagram":"#E4405F","Google Drive":"#0F9D58",SharePoint:"#0078D4",Box:"#0061D5",Confluence:"#172B4D",Asana:"#F06A6A",Linear:"#5E6AD2",ClickUp:"#7B68EE",Todoist:"#E44332","Stack Overflow":"#F48024",Discord:"#5865F2","Twitter/X":"#1DA1F2",GitHub:"#181717",Okta:"#007DC1",Postscript:"#6E42CA",QuickBooks:"#2CA01C",Magento:"#F26322",Mailchimp:"#FFE01B",Vidyard:"#19B995",Dialpad:"#6C47FF",Freshdesk:"#00A65E","Google Calendar":"#4285F4",Xero:"#13B5EA",FreshBooks:"#108CCB",Webflow:"#4353FF",PayPal:"#003087","Power BI":"#F2C811","Power Automate":"#0066FF",Azure:"#0089D6",SAP:"#0FAAFF",Oracle:"#F80000",NetSuite:"#90C53F",ServiceNow:"#81B5A1",Workday:"#005CB9",Bombora:"#FF6E42","6sense":"#0052CC",Demandbase:"#018540",Pendo:"#E8508A",Gainsight:"#7CC576",Clari:"#3DCFCF",Trello:"#0079BF","Google Sheets":"#0F9D58",Excel:"#217346",Sendgrid:"#1A82E2",Aircall:"#00B388",RingCentral:"#FF6600",Acuity:"#3C3C3C",Looker:"#4285F4",Fivetran:"#0073FF",Genesys:"#FF4F1F",Five9:"#3E53A0","Amazon Connect":"#FF9900",Ahrefs:"#FF6A00",Semrush:"#FF642D","Google Search Console":"#4285F4","Surfer SEO":"#21C0E8",Grammarly:"#15C39A",Contentful:"#2478CC",Figma:"#F24E1E","Microsoft Word":"#2B579A",Chrome:"#4285F4",Default:"#3a4a66"};
+function gIC(n){return IC[n]||IC.Default}
+function gI(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+
+// ═══ RENDERING ═══
+let currentCategory=null,currentTool=null;
+
+function initTicker(){
+  const t=document.getElementById('ticker');
+  let items=[];
+  // Collect all tools
+  let allTools=[];
+  Object.entries(CATEGORIES).forEach(([k,cat])=>cat.tools.forEach(tool=>allTools.push({...tool,cat:cat.short})));
+
+  // Section 1: Category leaders with scores
+  Object.values(CATEGORIES).forEach(cat=>{
+    const l=cat.tools[0];
+    const sc=l.score>=85?'var(--green)':l.score>=75?'var(--amber)':'var(--red)';
+    items.push(`<span class="ticker-item"><span class="company">${l.name}</span><span class="round">${cat.short} #1</span><span class="detail" style="color:${sc}">${l.score.toFixed(1)}</span></span>`);
+  });
+
+  // Section 2: Top 10 momentum movers
+  const byMomentum=[...allTools].sort((a,b)=>parseFloat(b.trend)-parseFloat(a.trend)).slice(0,10);
+  byMomentum.forEach(t=>{
+    items.push(`<span class="ticker-item"><span class="company">${t.name}</span><span class="round">▲ MOMENTUM</span><span class="detail" style="color:var(--green)">${t.trend}%</span></span>`);
+  });
+
+  // Section 3: Top signal strength
+  const bySignal=[...allTools].sort((a,b)=>b.signal-a.signal).slice(0,6);
+  bySignal.forEach(t=>{
+    items.push(`<span class="ticker-item"><span class="company">${t.name}</span><span class="round">PMF</span><span class="detail">${t.signal}/100</span></span>`);
+  });
+
+  const html=items.join('<span class="ticker-sep">◆</span>');
+  t.innerHTML=html+'<span class="ticker-sep">◆</span>'+html;
+}
+
+function initCategoryNav(){
+  const nav=document.getElementById('categoryNav');
+  Object.entries(CATEGORIES).forEach(([key,cat],i)=>{
+    const tab=document.createElement('div');
+    tab.className=`cat-tab${i===0?' active':''}`;
+    tab.textContent=cat.short;
+    tab.onclick=()=>selectCategory(key);
+    nav.appendChild(tab);
+  });
+}
+
+function selectCategory(key){
+  currentCategory=key;currentTool=null;
+  document.querySelectorAll('.cat-tab').forEach((tab,i)=>{
+    tab.className=`cat-tab${Object.keys(CATEGORIES)[i]===key?' active':''}`;
+  });
+  const cat=CATEGORIES[key];
+  document.getElementById('panelTitle').textContent=cat.name.toUpperCase();
+  document.getElementById('panelCount').textContent=`${cat.tools.length} INSTRUMENTS`;
+  renderToolsList(cat.tools);
+  renderEmptyDetail();
+}
+
+function renderToolsList(tools){
+  const list=document.getElementById('toolsList');
+  list.innerHTML='';
+  tools.forEach((tool,i)=>{
+    const row=document.createElement('div');
+    row.className='tool-row';
+    row.onclick=()=>selectTool(tool,i,row);
+    const tc=tool.trendDir==='up'?'var(--green)':'var(--red)';
+    const ta=tool.trendDir==='up'?'▲':'▼';
+    const sc=tool.score>=85?'var(--green)':tool.score>=75?'var(--amber)':'var(--red)';
+    const sic=tool.signal>=80?'var(--green)':tool.signal>=60?'var(--amber)':'var(--red)';
+    row.innerHTML=`
+      <span class="tool-rank">${String(i+1).padStart(2,'0')}</span>
+      <div class="tool-info"><span class="tool-name">${tool.name}</span><span class="tool-tag ${tool.tagClass}">${tool.tag}</span></div>
+      <span class="tool-score" style="color:${sc}">${tool.score.toFixed(1)}</span>
+      <span class="tool-trend" style="color:${tc}">${ta} ${tool.trend}%</span>
+      <span class="tool-signal"><div class="signal-bar"><div class="signal-bar-fill" style="width:${tool.signal}%;background:${sic}"></div></div></span>`;
+    list.appendChild(row);
+  });
+}
+
+function selectTool(tool,index,row){
+  currentTool=tool;
+  document.querySelectorAll('.tool-row').forEach(r=>r.classList.remove('active'));
+  row.classList.add('active');
+  renderToolDetail(tool,index);
+}
+
+function renderEmptyDetail(){
+  document.getElementById('detailPanel').innerHTML=`<div class="detail-empty"><div class="icon">◆</div><p>SELECT AN INSTRUMENT TO VIEW ANALYSIS</p><p style="font-size:9px;color:var(--notable-dark);margin-top:8px">POWERED BY NOTABLE CAPITAL</p></div>`;
+}
+
+function renderToolDetail(tool,index){
+  const p=document.getElementById('detailPanel');
+  const sc=tool.score>=85?'var(--green)':tool.score>=75?'var(--amber)':'var(--red)';
+  const tc=tool.trendDir==='up'?'var(--green)':'var(--red)';
+  const intHTML=tool.integrations.map(int=>{
+    if(int.startsWith("Everything")) return `<div class="integration-chip" style="border-color:var(--notable-primary);color:var(--notable-primary)">⚡ ${int}</div>`;
+    const c=gIC(int);
+    return `<div class="integration-chip"><div class="integration-icon" style="background:${c}">${gI(int)}</div>${int}</div>`;
+  }).join('');
+  const bars=Array.from({length:14},()=>{const h=Math.random()*14+4;const c=Math.random()>0.3?'var(--green)':'var(--red)';return `<div class="mini-bar" style="height:${h}px;background:${c}"></div>`;}).join('');
+
+  p.innerHTML=`
+    <div class="detail-header fade-in">
+      <div class="detail-top">
+        <div class="detail-title-area">
+          <div class="detail-logo">${gI(tool.name)}</div>
+          <div class="detail-title"><h2>${tool.name}</h2><span class="tagline">${tool.tagline}</span></div>
+        </div>
+        <div class="detail-score-big">
+          <div class="number" style="color:${sc}">${tool.score.toFixed(1)}</div>
+          <div class="label">COMPOSITE SCORE</div>
+          <div class="mini-chart" style="margin-top:4px;justify-content:flex-end">${bars}</div>
+        </div>
+      </div>
+      <div class="detail-meta">
+        <div class="meta-item"><div class="meta-label">RANK</div><div class="meta-value">#${index+1} IN CATEGORY</div></div>
+        <div class="meta-item"><div class="meta-label">MOMENTUM</div><div class="meta-value" style="color:${tc}">${tool.trendDir==='up'?'▲':'▼'} ${tool.trend}%</div></div>
+        <div class="meta-item"><div class="meta-label">CLASS</div><div class="meta-value">${tool.tag}</div></div>
+        <div class="meta-item"><div class="meta-label">FOUNDED</div><div class="meta-value">${tool.founded}</div></div>
+        <div class="meta-item"><div class="meta-label">STAGE</div><div class="meta-value">${tool.stage}</div></div>
+        <div class="meta-item"><div class="meta-label">HQ</div><div class="meta-value">${tool.hq}</div></div>
+      </div>
+      <a href="${tool.url}" target="_blank" class="visit-btn">→ VISIT ${tool.name.toUpperCase().replace(/ \(.*\)/,'')}</a>
+    </div>
+    <div class="pros-cons fade-in" style="animation-delay:0.08s">
+      <div class="pros-section">
+        <div class="section-label bull">▲ BULL CASE</div>
+        ${tool.pros.map(p=>`<div class="pro-item">${p}</div>`).join('')}
+      </div>
+      <div class="cons-section">
+        <div class="section-label bear">▼ BEAR CASE</div>
+        ${tool.cons.map(c=>`<div class="con-item">${c}</div>`).join('')}
+      </div>
+    </div>
+    <div class="integrations-section fade-in" style="animation-delay:0.12s">
+      <div class="section-label" style="color:var(--cyan)">⬡ NATIVE INTEGRATIONS</div>
+      <div class="integrations-grid">${intHTML}</div>
+    </div>
+    ${tool.customers && tool.customers.length > 0 ? `
+    <div class="integrations-section fade-in" style="animation-delay:0.14s;border-bottom:1px solid var(--border)">
+      <div class="section-label" style="color:var(--text-secondary)">◎ REFERENCED CUSTOMERS</div>
+      <div class="customers-row">${tool.customers.map(c=>`<span class="customer-chip">${c}</span>`).join('')}</div>
+    </div>` : ''}
+    <div class="offers-section fade-in" style="animation-delay:0.16s">
+      <div class="section-label" style="color:var(--notable-primary)">★ STARTUP OFFER</div>
+      <div class="offer-card">
+        <div class="offer-title">${tool.offer}</div>
+        <div class="offer-details">${tool.offerDetail}</div>
+        <div class="offer-value">${tool.offerValue}</div>
+      </div>
+    </div>
+    <div class="cta-section fade-in" style="animation-delay:0.2s">
+      <button class="cta-button" onclick="window.open('mailto:startups@notablecap.com?subject=GTM Stack Inquiry: ${encodeURIComponent(tool.name)}&body=Hi Notable team,%0D%0A%0D%0AI found ${encodeURIComponent(tool.name)} on the GTM Terminal and would like to connect regarding our stack evaluation.%0D%0A%0D%0ACompany:%0D%0AStage:%0D%0AGTM Challenge:%0D%0A','_blank')">
+        ◆ CONNECT WITH NOTABLE STARTUPS TEAM
+      </button>
+      <div class="cta-sub">Get personalized GTM stack recommendations from Notable Capital's portfolio team</div>
+    </div>
+    <div class="notable-watermark">
+      <span>Notable Capital · We back founders who are notable.</span>
+    </div>`;
+  p.scrollTop=0;
+}
+
+// ═══ INIT ═══
+function init(){
+  let total=0;
+  Object.values(CATEGORIES).forEach(c=>total+=c.tools.length);
+  document.getElementById('totalTools').textContent=total;
+  document.getElementById('totalCats').textContent=Object.keys(CATEGORIES).length;
+  initTicker();
+  initCategoryNav();
+  selectCategory(Object.keys(CATEGORIES)[0]);
+}
+init();
+</script>
+</body>
+</html>
