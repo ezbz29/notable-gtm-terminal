@@ -45,39 +45,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ═══ FUNDING TICKER ═══ */
-.ticker-wrap {
-  width: 100%;
-  overflow: hidden;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  padding: 5px 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.ticker {
-  display: flex;
-  animation: tickerScroll 90s linear infinite;
-  white-space: nowrap;
-  width: fit-content;
-}
-.ticker-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 28px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.3px;
-}
-.ticker-item .company { color: var(--text-primary); font-weight: 600; }
-.ticker-item .round { color: var(--notable-primary); font-weight: 700; }
-.ticker-item .detail { color: var(--text-dim); }
-.ticker-item .amount { color: var(--green); font-weight: 700; }
-.ticker-sep { color: var(--border-bright); padding: 0 6px; font-size: 8px; }
-@keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
 /* ═══ HEADER ═══ */
 .header {
   padding: 14px 28px;
@@ -369,8 +336,6 @@ function checkPw(){
 document.getElementById('pwInput').focus();
 </script>
 
-<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
-
 <div class="header">
   <div class="header-left">
     <div class="logo-mark">N</div>
@@ -409,8 +374,7 @@ document.getElementById('pwInput').focus();
 </div>
 
 <script>
-// ═══ REAL GTM FUNDING TICKER DATA ═══
-// ═══ TICKER DATA — dynamically generated from tool database ═══
+// ═══ CATEGORY DATABASE ═══
 
 // ═══ CATEGORY DATABASE ═══
 const CATEGORIES = {
@@ -613,36 +577,6 @@ function gI(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperC
 // ═══ RENDERING ═══
 let currentCategory=null,currentTool=null;
 
-function initTicker(){
-  const t=document.getElementById('ticker');
-  let items=[];
-  // Collect all tools
-  let allTools=[];
-  Object.entries(CATEGORIES).forEach(([k,cat])=>cat.tools.forEach(tool=>allTools.push({...tool,cat:cat.short})));
-
-  // Section 1: Category leaders with scores
-  Object.values(CATEGORIES).forEach(cat=>{
-    const l=cat.tools[0];
-    const sc=l.score>=85?'var(--green)':l.score>=75?'var(--amber)':'var(--red)';
-    items.push(`<span class="ticker-item"><span class="company">${l.name}</span><span class="round">${cat.short} #1</span><span class="detail" style="color:${sc}">${l.score.toFixed(1)}</span></span>`);
-  });
-
-  // Section 2: Top 10 momentum movers
-  const byMomentum=[...allTools].sort((a,b)=>parseFloat(b.trend)-parseFloat(a.trend)).slice(0,10);
-  byMomentum.forEach(t=>{
-    items.push(`<span class="ticker-item"><span class="company">${t.name}</span><span class="round">▲ MOMENTUM</span><span class="detail" style="color:var(--green)">${t.trend}%</span></span>`);
-  });
-
-  // Section 3: Top signal strength
-  const bySignal=[...allTools].sort((a,b)=>b.signal-a.signal).slice(0,6);
-  bySignal.forEach(t=>{
-    items.push(`<span class="ticker-item"><span class="company">${t.name}</span><span class="round">PMF</span><span class="detail">${t.signal}/100</span></span>`);
-  });
-
-  const html=items.join('<span class="ticker-sep">◆</span>');
-  t.innerHTML=html+'<span class="ticker-sep">◆</span>'+html;
-}
-
 function initCategoryNav(){
   const nav=document.getElementById('categoryNav');
   Object.entries(CATEGORIES).forEach(([key,cat],i)=>{
@@ -777,7 +711,6 @@ function init(){
   Object.values(CATEGORIES).forEach(c=>total+=c.tools.length);
   document.getElementById('totalTools').textContent=total;
   document.getElementById('totalCats').textContent=Object.keys(CATEGORIES).length;
-  initTicker();
   initCategoryNav();
   selectCategory(Object.keys(CATEGORIES)[0]);
 }
